@@ -1,0 +1,4 @@
+TA,Timed automaton
+TChecker,TChecker file format
+UPPAAL,UPPAAL XML file format
+Correct,Model satisfies its requirements

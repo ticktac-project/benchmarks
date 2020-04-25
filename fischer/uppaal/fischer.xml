@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// This file is a part of the TickTac benchmarks project.
+// See files AUTHORS and LICENSE for copyright details.
+
+// Inspired from UPPAAL demo model of Fischer's protocol introduced in:
+// Martin Abadi and Leslie Lamport, An Old-Fashioned Recipe for Real
+// Time, ACM Transactions on Programmin Languages and SYstems, 16(5),
+// pp 1543-1571, 1994.
+
+const int N = 3;  // Number of processes
+const int k = 1;  // Minimum delay
+const int K = 1;  // Maximal delay
+
+typedef int[0,N] id_t;
+typedef int[1,N] pid_t;
+
+id_t id := 0;</declaration>
+	<template>
+		<name x="5" y="5">P</name>
+		<parameter>pid_t pid</parameter>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="-238" y="-8">
+			<name x="-246" y="8">cs</name>
+		</location>
+		<location id="id1" x="-51" y="-8">
+			<name x="-59" y="8">wait</name>
+		</location>
+		<location id="id2" x="-51" y="-153">
+			<name x="-61" y="-187">req</name>
+			<label kind="invariant" x="-34" y="-161">x&lt;=K</label>
+		</location>
+		<location id="id3" x="-238" y="-153">
+			<name x="-248" y="-187">A</name>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-280" y="-85">id:=0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-204" y="-34">x &gt; k &amp;&amp; id==pid</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-25" y="-93">id==0</label>
+			<label kind="assignment" x="-25" y="-76">x:=0</label>
+			<nail x="-25" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="-170" y="-93">x:=0, id:=pid</label>
+			<nail x="-76" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-178" y="-170">id==0</label>
+			<label kind="assignment" x="-170" y="-153">x:=0</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+// List one or more processes to be composed into a system.
+system P;
+    </system>
+	<queries>
+		<query>
+			<formula>A[] forall (i : pid_t) forall (j : pid_t) i != j imply not (P(i).cs and P(j).cs)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] !deadlock
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
