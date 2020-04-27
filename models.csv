@@ -1,4 +1,5 @@
-fischer/tchecker/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version),TA,TChecker,Correct
-fischer/tchecker/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA,TChecker
-fischer/uppaal/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version),TA,UPPAAL,Correct
-fischer/uppaal/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA,UPPAAL
+Model,Description,Tags
+fischer/tchecker/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version), TA TChecker Correct
+fischer/tchecker/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA TChecker
+fischer/uppaal/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version),TA UPPAAL Correct
+fischer/uppaal/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA UPPAAL
