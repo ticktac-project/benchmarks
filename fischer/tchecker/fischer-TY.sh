@@ -50,6 +50,11 @@ echo "# Model of Fischer's protocol introduced in:
 # NB: this model does not satisfy mutual exclusion
 "
 
+echo "
+# Mutual exclusion between process 1 and process 2 can be verified by checking
+# unreachability of a configuration with labels cs1 and cs2
+"
+
 echo "system:fischer_TY_${N}_${k}_$K
 "
 

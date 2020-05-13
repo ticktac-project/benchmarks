@@ -47,6 +47,11 @@ echo "# Inspired from UPPAAL demo model of Fischer's protocol introduced in:
 # Transactions on Programming Languages and Systems, 16(5) pp. 1543-1571, 1994.
 "
 
+echo "
+# Mutual exclusion between process 1 and process 2 can be verified by checking
+# unreachability of a configuration with labels cs1 and cs2
+"
+
 echo "system:fischer_${N}_${k}_$K
 "
 
