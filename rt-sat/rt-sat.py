@@ -3,78 +3,8 @@ import random
 import argparse
 from itertools import chain
 from io import StringIO
-from contextlib import redirect_stdout
+from data import *
 
-# Simple examples:
-
-g1 = [(0, 100, 120, False, 2, [1, 2]),
-    (1, 50, 150, False, 1, [3, 4]),
-    (2, 50, 150, False, 1, [3, 4])] # sat
-
-g2 = [(0, 100, 120, False, 2, [1, 2]),
-    (1, 50, 150, False, 1, [3, 4]),
-    (2, 50, 150, True, 1, [3, 4])] # unsat
-g3 = [(0, False, 2, 100, 120, [1, 2])] # sat
-
-# From CAV19
-
-unsat1 = [
-    (0, 100, 200, False, 2, [3,4]),
-    (3, 150, 300, False, 1, [1,2]),
-    (4, 100, 150, True, 1, [3]),
-    (1, 50, 100, False, 2, [6, 7, 8, 9]),
-    (2, 80, 100, False, 3, [0, 6, 7, 8]),
-]
-
-unsat2 = [
-    (0, 100, 200, False, 2, [4,5]),
-    (4, 150, 300, False, 2, [7,3]),
-    (5, 100, 150, True, 1, [7]),
-    (3, 50, 100, False, 1, [1, 2]),
-    (1, 80, 100, False, 3, [6, 7, 8, 9]),
-    (2, 90, 110, False, 2, [1, 6, 7, 8]),
-]
-
-unsat3 = [
-    (1, 80, 160, False, 1, [6,7]),
-    (2, 50, 150, False, 2, [1, 8]),
-    (3, 50, 200, False, 2, [1,2,9]),
-    (4, 80, 100, False, 1, [3]),
-    (0, 100, 150, False, 2, [3,4])
-]
-
-
-sat1 = [
-    (1, 50, 150, False, 3, [4,5,6,7]),
-    (2, 50, 100, False, 2, [1, 4,5,6]),
-    (3, 100, 120, False, 1, [1,2]),
-    (0, 150, 200, False, 2, [4,5])
-]
-
-
-sat2 = [
-    (1, 50, 150, False, 1, [6,7]),
-    (2, 50, 100, False, 2, [1,8]),
-    (3, 100, 120, False, 2, [1,2, 9]),
-    (4, 80, 120, False, 2, [3, 6, 7, 8]),
-    (0, 150, 200, False, 2, [3,4])
-]
-
-sat3 = [
-    (9, 50, 100, False, 4, [0, 1, 2, 3]),
-    (10, 50, 80, False, 4, [9, 0, 1, 2, 3, 4]),
-    (11, 50, 100, False, 3, [9, 10, 4, 5, 6]),
-    (12, 50, 100, False, 4, [9, 11, 3, 4, 5]),
-    (13, 100, 120, False, 1, [11,12]),
-    (14, 80, 120, False, 2, [13, 10]),
-    (15, 50, 100, True, 1, [14]),
-    (0, 150, 200, False, 1, [14,15])
-]
-
-
-sat_benchmarks = [g1, sat1, sat2, sat3]
-unsat_benchmarks = [g2,g3,unsat1, unsat2, unsat3]
-all_benchmarks = sat_benchmarks + unsat_benchmarks
 class TAWRITER:
     def __init__(self, graph, bound=None):
         self.graph = graph
@@ -176,8 +106,6 @@ def main():
     if args.number >= len(sat_benchmarks):
         raise Exception("There is no benchmark number " + str(args.number) + " in the class " + args.benchmark_class)
     ta = TAWRITER(sat_benchmarks[args.number], args.bound)
-    #with open(args.benchmark_class  + str(args.number) + ".txt", "w") as f:
-    #    with redirect_stdout(f):
     ta.dump()
 
 if __name__ == "__main__":
