@@ -3,3 +3,7 @@ fischer/tchecker/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version
 fischer/tchecker/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA TChecker
 fischer/uppaal/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version),TA UPPAAL Correct
 fischer/uppaal/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA UPPAAL
+rt-sat/generate.sh uppaal sat,Real-time satisfiability,TA UPPAAL Correct
+rt-sat/generate.sh uppaal unsat,Real-time satisfiability,TA UPPAAL
+rt-sat/generate.sh tchecker sat,Real-time satisfiability,TA TChecker Correct
+rt-sat/generate.sh tchecker unsat,Real-time satisfiability,TA TChecker
