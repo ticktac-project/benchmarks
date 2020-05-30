@@ -158,9 +158,9 @@ def main():
         benchmarks = unsat_benchmarks
     else:
         raise Exception("Unrecognized benchmark class")
-    if args.number >= len(sat_benchmarks):
+    if args.number >= len(benchmarks):
         raise Exception("There is no benchmark number " + str(args.number) + " in the class " + args.benchmark_class)
-    ta = TAWRITER(sat_benchmarks[args.number], args.bound)
+    ta = TAWRITER(benchmarks[args.number], args.bound)
     ta.dump()
 
 if __name__ == "__main__":
