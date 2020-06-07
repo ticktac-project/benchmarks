@@ -1,4 +1,4 @@
-# TChecker model of Fischer's mutual exclusion protocol
+# TChecker models of Fischer's mutual exclusion protocol
 
 This directory contains TChecker models for the well-known Fischer's mutual 
 exclusion protocol introduced in:

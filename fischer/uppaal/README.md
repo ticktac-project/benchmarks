@@ -1,4 +1,4 @@
-# UPPAAL model of Fischer's mutual exclusion protocol
+# UPPAAL models of Fischer's mutual exclusion protocol
 
 This directory contains UPPAAL 4.X models for the well-known Fischer's mutual 
 exclusion protocol introduced in:
