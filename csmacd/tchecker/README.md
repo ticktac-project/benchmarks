@@ -20,7 +20,6 @@ Walukiewicz: Why Liveness for Timed Automata Is Hard, and What We Can Do About
 It. FSTTCS 2016: 48:1-48:14*). Run `csmacd-fixed.sh` for help on how to build a 
 model from the script.
 
-- `csmacd-full.sh` generated a TChecker model that correspond to the publication
-above (i.e. collision is model as a global transition that synchronizes all the
-processes), with the missing transition added. Run `csmacd-full.sh` for help on
-how to build a model from the script.
+- `csmacd-full.sh` generated a TChecker model that corresponds to the publication
+above (i.e. collisions are modelled as a global transition that synchronizes all 
+the processes), and with the missing transition added. Run `csmacd-full.sh` for help on how to build a model from the script.
