@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal
+Team//DTD Flat System 1.1//EN'
+'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>
+<nta>
+  <declaration>// This file is a part of the TickTac benchmarks project.
+  // See files AUTHORS and LICENSE for copyright details.
+
+  // Inspired from:
+  // C. Daws, A. Oliveiro, S. Tripakis, and S. Yovine. The tool Kronos, Hybrid 
+  // Systems III, 1996
+
+  const int N=10;
+  const int TTRT=50*N;
+  const int SA=20;
+  const int TD=0;
+  
+  typedef int[1,N] id_t;
+  
+  chan TT[id_t];
+  chan RT[id_t];
+  </declaration>
+  <template>
+    <name x="5" y="5">Station</name>
+    <parameter>const id_t pid</parameter>
+    <declaration>
+      // Place local declarations here.
+      clock trt,xA,xB;
+    </declaration>
+    <location id="id0" x="272" y="112">
+      <name x="264" y="128">q7</name>
+      <label kind="invariant" x="216" y="80">xB&lt;=TTRT+SA</label>
+    </location>
+    <location id="id1" x="152" y="112">
+      <name x="144" y="128">q6</name>
+      <label kind="invariant" x="144" y="80">trt&lt;=SA</label>
+    </location>
+    <location id="id2" x="144" y="-144">
+      <name x="134" y="-174">q5</name>
+      <label kind="invariant" x="134" y="-129">trt&lt;=SA</label>
+    </location>
+    <location id="id3" x="8" y="-16">
+      <name x="-2" y="-46">q4</name>
+    </location>
+    <location id="id4" x="8" y="112">
+      <name x="-2" y="82">q3</name>
+      <label kind="invariant" x="-16" y="128">xA&lt;=TTRT+SA</label>
+    </location>
+    <location id="id5" x="-144" y="112">
+      <name x="-154" y="82">q2</name>
+      <label kind="invariant" x="-168" y="128">trt&lt;=SA</label>
+    </location>
+    <location id="id6" x="-144" y="-96">
+      <name x="-152" y="-80">q1</name>
+      <label kind="invariant" x="-168" y="-128">trt&lt;=SA</label>
+    </location>
+    <location id="id7" x="-320" y="0">
+      <name x="-330" y="-30">q0</name>
+    </location>
+    <init ref="id7"/>
+    <transition>
+      <source ref="id7"/><target ref="id6"/>
+      <label kind="guard" x="-292" y="-78">trt&gt;=TTRT</label>
+      <label kind="synchronisation" x="-292"
+	     y="-63">TT[pid]?</label>
+      <label kind="assignment" x="-292" y="-48">trt:=0,xB:=0</label>
+    </transition>
+    <transition>
+      <source ref="id7"/><target ref="id5"/>
+      <label kind="guard" x="-292" y="26">trt&lt;TTRT</label>
+      <label kind="synchronisation" x="-292" y="41">TT[pid]?</label>
+      <label kind="assignment" x="-292" y="56">trt:=0,xB:=0</label>
+    </transition>
+    <transition>
+      <source ref="id6"/><target ref="id3"/>
+      <label kind="guard" x="-128" y="-86">trt==SA</label>
+      <label kind="synchronisation" x="-128" y="-71">RT[pid]!</label>
+    </transition>
+    <transition>
+      <source ref="id5"/><target ref="id4"/>
+      <label kind="guard" x="-104" y="88">trt==SA</label>
+    </transition>
+    <transition>
+      <source ref="id4"/><target ref="id3"/>
+      <label kind="synchronisation" x="-52" y="33">RT[pid]!</label>
+    </transition>
+    <transition>
+      <source ref="id3"/><target ref="id2"/>
+      <label kind="guard" x="16" y="-110">trt&gt;=TTRT</label>
+      <label kind="synchronisation" x="16" y="-95">TT[pid]?</label>
+      <label kind="assignment" x="16" y="-80">trt:=0,xA:=0</label>
+    </transition>
+    <transition>
+      <source ref="id3"/><target ref="id1"/>
+      <label kind="guard" x="48" y="17">trt&lt;TTRT</label>
+      <label kind="synchronisation" x="48" y="32">TT[pid]?</label>
+      <label kind="assignment" x="48" y="47">trt:=0,xA:=0</label>
+    </transition>
+    <transition>
+      <source ref="id2"/><target ref="id7"/>
+      <label kind="guard" x="-96" y="-191">trt==SA</label>
+      <label kind="synchronisation" x="-96"
+	     y="-176">RT[pid]!</label>
+      <nail x="144" y="-192"/>
+      <nail x="-320" y="-192"/>
+    </transition>
+    <transition>
+      <source ref="id1"/><target ref="id0"/>
+      <label kind="guard" x="176" y="112">trt==SA</label>
+    </transition>
+    <transition>
+      <source ref="id0"/><target ref="id7"/>
+      <label kind="synchronisation" x="-80" y="160">RT[pid]!</label>
+      <nail x="272" y="184"/>
+      <nail x="-320" y="184"/>
+    </transition>
+  </template>
+  <template>
+    <name>Ring</name>
+    <declaration>
+      clock t;
+      id_t id = 1;
+    </declaration>
+    <location id="id8" x="112" y="-184">
+      <name x="102" y="-214">green</name>
+    </location>
+    <location id="id9" x="40" y="-72"></location>
+    <location id="id10" x="-144" y="-72">
+      <label kind="invariant" x="-176" y="-104">t&lt;=TD</label>
+    </location>
+    <init ref="id10"/>
+    <transition>
+      <source ref="id9"/><target ref="id10"/>
+      <label kind="synchronisation" x="-64" y="-16">RT[id]?</label>
+      <label kind="assignment" x="-112" y="0">t:=0, id:=(id %
+      N)+1</label>
+      <nail x="-56" y="-24"/>
+    </transition>
+    <transition>
+      <source ref="id10"/><target ref="id9"/>
+      <label kind="guard" x="-88" y="-152">t==TD</label>
+      <label kind="synchronisation" x="-88" y="-136">TT[id]!</label>
+      <nail x="-56" y="-120"/>
+    </transition>
+  </template>
+  <system>
+    system Station, Ring;
+  </system>
+</nta>
