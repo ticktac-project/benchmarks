@@ -46,7 +46,7 @@ Run
 
 	generate.sh format class
 
-to generate prespecified  models, with format in {uppaal,tchecker} and class in {sat,unsat}.
+to generate all prespecified models, with format in {uppaal,tchecker} and class in {sat,unsat}.
 
 For TChecker models, the specification is the reachabability of the "sat" label.
 For Uppaal, the reachability query is in the rt-sat.q file.
