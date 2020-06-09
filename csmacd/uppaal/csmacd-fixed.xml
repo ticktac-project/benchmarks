@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// This file is a part of the TickTac benchmarks project.
+// See files AUTHORS and LICENSE for copyright details.
+
+// Inspired from: Stavros Tripakis, Sergio Yovine: Analysis of Timed 
+// Systems Using Time-Abstracting Bisimulations. Formal Methods Syst.
+// Des. 18(1): 25-68 (2001)
+//
+// This model adds a missing transition Retry-busy!-&gt;Retry in the 
+// publication above. Without this transition, full communication 
+// cannot be achieved once a collision occured
+
+const int N=2;
+const int L=808;
+const int S=26;
+
+typedef int[1,N] pid_t;
+
+chan begin;
+chan end;
+chan cd[pid_t];
+chan busy;</declaration>
+	<template>
+		<name x="5" y="5">Bus</name>
+		<declaration>clock y;
+int[1,N+1] i;</declaration>
+		<location id="id0" x="-144" y="-68">
+			<name x="-136" y="-93">Loop</name>
+			<committed/>
+		</location>
+		<location id="id1" x="144" y="-68">
+			<name x="161" y="-85">Collision</name>
+			<label kind="invariant" x="136" y="-51">y&lt;S</label>
+		</location>
+		<location id="id2" x="144" y="-187">
+			<name x="134" y="-221">Active</name>
+		</location>
+		<location id="id3" x="-144" y="-187">
+			<name x="-154" y="-221">Idle</name>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="212" y="-204">y&gt;=S</label>
+			<label kind="synchronisation" x="212" y="-187">busy?</label>
+			<nail x="204" y="-204"/>
+			<nail x="204" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-255" y="-76">i&lt;=N</label>
+			<label kind="synchronisation" x="-255" y="-59">cd[i]!</label>
+			<label kind="assignment" x="-255" y="-42">i=i+1</label>
+			<nail x="-212" y="-76"/>
+			<nail x="-204" y="-42"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-204" y="-153">i==N+1</label>
+			<label kind="assignment" x="-170" y="-136">i=1</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-8" y="-68">y&lt;S</label>
+			<label kind="assignment" x="-8" y="-51">i=1</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="144" y="-161">y&lt;S</label>
+			<label kind="synchronisation" x="144" y="-144">begin?</label>
+			<label kind="assignment" x="144" y="-127">y=0</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-17" y="-280">end?</label>
+			<label kind="assignment" x="-17" y="-263">y=0</label>
+			<nail x="0" y="-246"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-25" y="-187">begin?</label>
+			<label kind="assignment" x="-25" y="-170">y=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Station</name>
+		<parameter>pid_t pid</parameter>
+		<declaration>clock x;</declaration>
+		<location id="id4" x="-42" y="-17">
+			<name x="-52" y="-51">Retry</name>
+			<label kind="invariant" x="-52" y="0">x&lt;2*S</label>
+		</location>
+		<location id="id5" x="110" y="-187">
+			<name x="100" y="-221">Start</name>
+			<label kind="invariant" x="100" y="-170">x&lt;=L</label>
+		</location>
+		<location id="id6" x="-195" y="-187">
+			<name x="-205" y="-221">Wait</name>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="51" y="-25">x&lt;2*S</label>
+			<label kind="synchronisation" x="51" y="-8">busy!</label>
+			<label kind="assignment" x="51" y="9">x=0</label>
+			<nail x="42" y="-8"/>
+			<nail x="34" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-177" y="-119">busy!</label>
+			<label kind="assignment" x="-177" y="-102">x=0</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-8" y="-136">x&lt;2*S</label>
+			<label kind="synchronisation" x="-8" y="-119">begin!</label>
+			<label kind="assignment" x="-8" y="-102">x=0</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-170" y="-17">x&lt;2*S</label>
+			<label kind="synchronisation" x="-170" y="0">cd[pid]?</label>
+			<label kind="assignment" x="-170" y="17">x=0</label>
+			<nail x="-119" y="-8"/>
+			<nail x="-110" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="102" y="-85">x&lt;S</label>
+			<label kind="synchronisation" x="102" y="-68">cd[pid]?</label>
+			<label kind="assignment" x="102" y="-51">x=0</label>
+			<nail x="93" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-272" y="-59">cd[pid]?</label>
+			<label kind="assignment" x="-272" y="-42">x=0</label>
+			<nail x="-221" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-323" y="-204">cd[pid]?</label>
+			<label kind="assignment" x="-297" y="-187">x=0</label>
+			<nail x="-263" y="-161"/>
+			<nail x="-263" y="-204"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-51" y="-323">x==L</label>
+			<label kind="synchronisation" x="-51" y="-306">end!</label>
+			<label kind="assignment" x="-51" y="-289">x=0</label>
+			<nail x="-42" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-76" y="-179">begin!</label>
+			<label kind="assignment" x="-76" y="-162">x=0</label>
+		</transition>
+	</template>
+	<system>system Bus, Station;
+    </system>
+	<queries>
+	</queries>
+</nta>
