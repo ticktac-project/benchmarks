@@ -1,7 +1,5 @@
 import sys
-import random
 import argparse
-from itertools import chain
 from io import StringIO
 from data import *
 
@@ -35,7 +33,6 @@ class TAWRITER:
         if not (0 in gate_identifiers):
             raise "A node with identifier 0 must be given"
 
-        #print("""<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>""", file=fout)
         print("<nta><declaration>",file=fout)
         if self.bound != None:
             print("clock t;", file=fout)
@@ -48,16 +45,11 @@ class TAWRITER:
         print("</declaration>",file=fout)
 
         for node in graph:
-            #(id, neg, th, period, duration, links) = node
             (id, period, duration, neg, th, links) = node
             print("<template><name>Node{0}</name>".format(id),file=fout)
             print("<declaration>clock x{0};</declaration>".format(id), file=fout)
-            #print("\nprocess:Node{0}".format(id), file=fout)
-            #print("clock:1:x{0}".format(id), file=fout)
-            #print("location:Node{0}:Down{{initial::invariant:x{0}<={1}}}".format(id,period), file=fout)
             print("<location id=\"Down{0}\"><name>Down</name><label kind=\"invariant\">x{0} &lt;= {1}</label></location>".format(id, period), file=fout)
 
-            #print("location:Node{0}:Up{{invariant:x{0}<={1}}}".format(id,duration), file=fout)
             print("<location id=\"Up{0}\"><name>Up</name><label kind=\"invariant\">x{0} &lt;= {1}</label></location>".format(id,duration),file=fout)
 
             if id == 0:
@@ -71,21 +63,18 @@ class TAWRITER:
                 negative = positive
                 positive = tmp
             for i in links:
-                #print("edge:Node{0}:Down:Down:idle{{provided:x{0}=={1} && out{2} == 2: do : x{0} = 0}}".format(id, period, i), file=fout)
                 print("<transition>",file=fout)
                 print("<source ref=\"Down{0}\"/><target ref=\"Down{0}\"/>".format(id),file=fout)
                 print("<label kind=\"guard\">x{0} == {1} &amp;&amp; out{2} == 2</label>".format(id,period,i),file=fout)
                 print("<label kind=\"assignment\">x{0} = 0</label>".format(id),file=fout)
                 print("</transition>",file=fout)
 
-#            print("edge:Node{0}:Down:Up:up{0}{{provided:x{0}=={1} &amp;&amp; {2} &amp;&amp; {3} : do : out{0} = 0; x{0} = 0}}".format(id,period, welldefined, negative), file=fout)
             print("<transition>",file=fout)
             print("<source ref=\"Down{0}\"/><target ref=\"Up{0}\"/>".format(id),file=fout)
             print("<label kind=\"guard\">x{0} == {1} &amp;&amp; {2} &amp;&amp; {3}</label>".format(id,period,welldefined,negative),file=fout)
             print("<label kind=\"assignment\">out{0} = 0, x{0} = 0</label>".format(id),file=fout)
             print("</transition>",file=fout)
 
-#            print("edge:Node{0}:Down:Up:up{0}{{provided:x{0}=={1} &amp;&amp; {2} &amp;&amp; {3}: do : out{0} = 1; x{0} = 0}}".format(id,period, welldefined, positive), file=fout)
             print("<transition>",file=fout)
             print("<source ref=\"Down{0}\"/><target ref=\"Up{0}\"/>".format(id),file=fout)
             print("<label kind=\"guard\">x{0} == {1} &amp;&amp; {2} &amp;&amp; {3}</label>".format(id,period,welldefined,positive),file=fout)
@@ -93,7 +82,6 @@ class TAWRITER:
             print("</transition>",file=fout)
 
 
-            #print("edge:Node{0}:Up:Down:down{0}{{provided:x{0}<={1} : do : out{0} = 2; x{0} = 0}}".format(id,duration), file=fout)
             print("<transition>",file=fout)
             print("<source ref=\"Up{0}\"/><target ref=\"Down{0}\"/>".format(id),file=fout)
             print("<label kind=\"guard\">x{0} &lt;= {1}</label>".format(id,duration),file=fout)
@@ -101,20 +89,16 @@ class TAWRITER:
             print("</transition>",file=fout)
 
             if id == 0:
-                #print("location:Node{0}:Done{{labels:sat}}".format(id), file=fout)
                 g = "out0 == 1 "
                 if self.bound != None:
                     g = g + "&amp;&amp; t &lt;= " + str(self.bound)
-                #print("edge:Node{0}:Up:Done:done{{provided:{1}}}".format(id, g), file=fout)
                 print("<transition>",file=fout)
                 print("<source ref=\"Up{0}\"/><target ref=\"Done{0}\"/>".format(id),file=fout)
                 print("<label kind=\"guard\">{0}</label>".format(g),file=fout)
                 print("</transition>",file=fout)
-            print("</template>",file=fout) 
+            print("</template>",file=fout)
 
-        #print("\nprocess:Input", file=fout)
         print("<template><name>Input</name>",file=fout)
-        #print("location:Input:init{committed::initial:}", file=fout)
         print("<location id=\"init\"><name>input_init</name><committed/></location>",file=fout)
 
         for input in input_identifiers:
@@ -124,13 +108,9 @@ class TAWRITER:
 
         prev = "init"
         for input in input_identifiers:
-            #print("edge:Input:{0}:In{1}:set{{do:out{1} = 1}}".format(prev,input), file=fout)
-            #print("edge:Input:{0}:In{1}:set{{do:out{1} = 0}}".format(prev,input), file=fout)
             print("<transition><source ref=\"{0}\"/><target ref=\"In{1}\"/><label kind=\"assignment\">out{1} = 1</label></transition>".format(prev,input),file=fout)
             print("<transition><source ref=\"{0}\"/><target ref=\"In{1}\"/><label kind=\"assignment\">out{1} = 0</label></transition>".format(prev,input),file=fout)
             prev = "In{0}".format(input)
-        #print("location:Input:Done{}", file=fout)
-        #print("edge:Input:{0}:Done:set{{}}".format(prev), file=fout)
         print("<transition><source ref=\"{0}\"/><target ref=\"input_done\"/></transition>".format(prev),file=fout)
 
         print("</template>",file=fout)
@@ -138,7 +118,6 @@ class TAWRITER:
         print("<instantiation></instantiation><system>",file=fout)
         print("system Input, " +  ", ".join(map(lambda node: "Node"+str(node[0]), graph)) + ";",file=fout)
         print("</system>",file=fout)
-        #print("<queries><query><formula>E&lt;&gt;Node0.Done</formula></query></queries>",file=fout)
         print("</nta>",file=fout)
         print(fout.getvalue())
 

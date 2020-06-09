@@ -1,7 +1,5 @@
 import sys
-import random
 import argparse
-from itertools import chain
 from io import StringIO
 from data import *
 
@@ -73,7 +71,6 @@ class TAWRITER:
                 if self.bound != None:
                     g = g + "&& t <= " + str(self.bound)
                 print("edge:Node{0}:Up:Done:done{{provided:{1}}}".format(id, g), file=fout)
-            # print("edge:Node{0}:Up:Down:down{0}{{initial::invariant:x{0}<={1}}}".format(id,duration), file=fout)
 
         print("\nprocess:Input", file=fout)
         print("location:Input:init{committed::initial:}", file=fout)
