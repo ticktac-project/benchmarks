@@ -9,7 +9,7 @@
 k=10
 K=10
 
-function usage() {
+usage() {
     echo "Usage: $0 N";
     echo "       $0 N k K";
     echo "       N number of processes";
@@ -43,7 +43,7 @@ echo "#clock:size:name
 "
 
 echo "# Inspired from UPPAAL demo model of Fischer's protocol introduced in:
-# Martin Abadi and Leslie Lamport, An Old-Fashioned Recipe for Real Time, ACM 
+# Martin Abadi and Leslie Lamport, An Old-Fashioned Recipe for Real Time, ACM
 # Transactions on Programming Languages and Systems, 16(5) pp. 1543-1571, 1994.
 "
 
@@ -71,7 +71,7 @@ for pid in `seq 1 $N`; do
     echo "# Process $pid
 process:P$pid
 clock:1:x$pid
-location:P$pid:A{initial:}	
+location:P$pid:A{initial:}
 location:P$pid:req{invariant:x$pid<=$K}
 location:P$pid:wait{}
 location:P$pid:cs{labels:cs$pid}

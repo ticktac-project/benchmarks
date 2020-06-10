@@ -40,7 +40,7 @@ echo "
 # configuration is accessible.
 "
 
-echo "system:toy_example_${N}
+echo "system:fig1-Morbe_et_al-CAV2011_${N}
 "
 
 # Events

@@ -17,4 +17,4 @@ else
 fi
 
 # Model
-cat fig1-Morbe_et_al-CAV2011.xml | sed -e s/"N = 3"/"N = $N"/ > fig1-Morbe_et_al-CAV2011_${N}.xml
+cat pacemaker_DDD.xml | sed -e s/"N = 3"/"N = $N"/ > pacemaker_DDD_${N}.xml

@@ -5,10 +5,11 @@
 // See files AUTHORS and LICENSE for copyright details.
 
 // Inspired from UPPAAL demo model of a pacemaker DDD introduced in:
-// Zhihao Jiang, Miroslav Pajic, Salar Moarref, Rajeev Alur and Rahul Mangharam,
-// Modeling and Verification of a Dual Chamber Implantable Pacemaker,
-//pp. 188–203, 2012 
+//Zhihao Jiang, Miroslav Pajic, Salar Moarref, Rajeev Alur, Rahul Mangharam:
+//Modeling and Verification of a Dual Chamber Implantable Pacemaker. 
+//TACAS 2012: 188-203
 
+//Timing parameters of the pacemaker
 const int TAVI = 150;
 const int TLRI = 1000;
 const int TPVARP = 100;
@@ -16,10 +17,14 @@ const int TVRP = 150;
 const int TURI = 400;
 const int TPVAB = 50;
 
+//Interval of a heart event covering all possible input to the pacemaker
+const int Aminwait = 0; 
+const int Amaxwait = 10000; 
+
 clock t;
 clock clk;
 
-chan AS, AR, VP, VS, AP, Aget, Vget;</declaration>
+broadcast chan AS, AP, VP, VS, Aget, Vget;</declaration>
 	<template>
 		<name x="5" y="5">LRI</name>
 		<declaration>// Place local declarations here.</declaration>
@@ -62,7 +67,7 @@ chan AS, AR, VP, VS, AP, Aget, Vget;</declaration>
 			<source ref="id0"/>
 			<target ref="id0"/>
 			<label kind="guard" x="-34" y="59">t &gt;= TLRI-TAVI</label>
-			<label kind="synchronisation" x="-8" y="93">AP!</label>
+			<label kind="synchronisation" x="-17" y="93">AP!</label>
 			<label kind="assignment" x="-17" y="76">t = 0</label>
 			<nail x="17" y="59"/>
 			<nail x="-17" y="59"/>
@@ -227,7 +232,7 @@ chan AS, AR, VP, VS, AP, Aget, Vget;</declaration>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id8"/>
-			<label kind="synchronisation" x="136" y="153">AR!</label>
+			<label kind="synchronisation" x="136" y="153">AP!</label>
 			<nail x="178" y="170"/>
 			<nail x="178" y="93"/>
 		</transition>
@@ -237,12 +242,181 @@ chan AS, AR, VP, VS, AP, Aget, Vget;</declaration>
 			<label kind="synchronisation" x="110" y="85">Aget?</label>
 		</transition>
 	</template>
+	<template>
+		<name>VRP</name>
+		<location id="id11" x="-153" y="0">
+			<name x="-195" y="-8">Idle</name>
+		</location>
+		<location id="id12" x="-153" y="-161">
+			<name x="-163" y="-195">inter</name>
+			<committed/>
+		</location>
+		<location id="id13" x="17" y="-161">
+			<name x="8" y="-195">VRP</name>
+			<label kind="invariant" x="34" y="-170">t &lt;= TVRP</label>
+		</location>
+		<init ref="id11"/>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-119" y="0">t &gt;= TVRP</label>
+			<nail x="-51" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-93" y="-102">VP?</label>
+			<label kind="assignment" x="-110" y="-85">t = 0</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-93" y="-178">VS!</label>
+			<label kind="assignment" x="-93" y="-161">t = 0</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-195" y="-93">Vget?</label>
+		</transition>
+	</template>
+	<template>
+		<name>RHM</name>
+		<declaration>clock x;</declaration>
+		<location id="id14" x="0" y="0">
+			<name x="-25" y="-34">AReady</name>
+			<label kind="invariant" x="-25" y="-51">x &lt; Amaxwait</label>
+		</location>
+		<init ref="id14"/>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id14"/>
+			<label kind="guard" x="-144" y="-34">x &gt; Aminwait</label>
+			<label kind="synchronisation" x="-102" y="-17">Aget!</label>
+			<label kind="assignment" x="-102" y="0">x = 0</label>
+			<nail x="-59" y="25"/>
+			<nail x="-59" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="68" y="-17">AP?</label>
+			<label kind="assignment" x="68" y="0">x = 0</label>
+			<nail x="59" y="25"/>
+			<nail x="59" y="-25"/>
+		</transition>
+	</template>
+	<template>
+		<name>Pvv</name>
+		<declaration>clock x;</declaration>
+		<location id="id15" x="-229" y="0">
+			<name x="-255" y="-34">wait_1st</name>
+		</location>
+		<location id="id16" x="-76" y="0">
+			<name x="-102" y="-34">wait_2nd</name>
+		</location>
+		<location id="id17" x="76" y="0">
+			<name x="66" y="-34">two_a</name>
+			<committed/>
+		</location>
+		<init ref="id15"/>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="assignment" x="-8" y="42">x = 0</label>
+			<nail x="76" y="59"/>
+			<nail x="-76" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-8" y="8">VP?</label>
+			<nail x="0" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-161" y="8">VP?</label>
+			<label kind="assignment" x="-161" y="34">x = 0</label>
+			<nail x="-153" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-8" y="-51">VS?</label>
+			<nail x="0" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-161" y="-51">VS?</label>
+			<label kind="assignment" x="-161" y="-25">x = 0</label>
+			<nail x="-153" y="-34"/>
+		</transition>
+	</template>
+	<template>
+		<name>PURI_test</name>
+		<declaration>clock x;</declaration>
+		<location id="id18" x="-229" y="-8">
+			<name x="-246" y="-42">wait_v</name>
+		</location>
+		<location id="id19" x="-76" y="-8">
+			<name x="-93" y="-42">wait_vp</name>
+		</location>
+		<location id="id20" x="68" y="-8">
+			<name x="51" y="-42">interval</name>
+			<committed/>
+		</location>
+		<init ref="id18"/>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id19"/>
+			<label kind="assignment" x="8" y="42">x = 0</label>
+			<nail x="68" y="59"/>
+			<nail x="-25" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-85" y="25">VS?</label>
+			<label kind="assignment" x="-85" y="42">x = 0</label>
+			<nail x="-140" y="42"/>
+			<nail x="-97" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-212" y="8">VS?</label>
+			<label kind="assignment" x="-212" y="25">x = 0</label>
+			<nail x="-153" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-161" y="-51">VP?</label>
+			<label kind="assignment" x="-170" y="-25">x = 0</label>
+			<nail x="-153" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="synchronisation" x="-8" y="-25">VP?</label>
+		</transition>
+	</template>
 	<system>// List one or more processes to be composed into a system.
-system LRI, AVI, URI, PVARP;
+system LRI, AVI, URI, PVARP, VRP, RHM, Pvv, PURI_test;
     </system>
 	<queries>
 		<query>
-			<formula></formula>
+			<formula>A[] true</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] (Pvv.two_a imply Pvv.x&lt;=TLRI)</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] (PURI_test.interval imply PURI_test.x&gt;=TURI)</formula>
 			<comment></comment>
 		</query>
 	</queries>

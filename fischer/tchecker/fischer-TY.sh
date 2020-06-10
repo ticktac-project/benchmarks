@@ -9,7 +9,7 @@
 k=10  # Gamma in the paper cited below
 K=10  # Delta in the paper cited below
 
-function usage() {
+usage() {
     echo "Usage: $0 N";
     echo "       $0 N k K";
     echo "       N number of processes";
@@ -43,7 +43,7 @@ echo "#clock:size:name
 "
 
 echo "# Model of Fischer's protocol introduced in:
-# Stavros Tripakis and Sergio Yovine, Analysis of Timed Systems using 
+# Stavros Tripakis and Sergio Yovine, Analysis of Timed Systems using
 # Time-Abstraction Bisimulations, Formal Methods in System Design, 18,
 # pp. 25-68, 2001.
 #
@@ -80,7 +80,7 @@ for pid in `seq 1 $N`; do
     echo "# Process $pid
 process:P$pid
 clock:1:x$pid
-location:P$pid:idle{initial:}	
+location:P$pid:idle{initial:}
 location:P$pid:trying{invariant:x$pid<=$K}
 location:P$pid:waiting{}
 location:P$pid:critical{labels:cs$pid}

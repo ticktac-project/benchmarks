@@ -1,6 +1,6 @@
-# UPPAAL models of the toy example
+# UPPAAL model of the fig1-Morbe_et_al-CAV2011
 
-This directory contains UPPAAL 4.X model for the model given given in FIG 1  in the following article:
+This directory contains UPPAAL 4.X model for the model given in FIG 1  in the following article:
 *Georges Morbé, Florian Pigorsch, Christoph Scholl:
 Fully Symbolic Model Checking for Timed Automata. CAV 2011: 616-632*
 
