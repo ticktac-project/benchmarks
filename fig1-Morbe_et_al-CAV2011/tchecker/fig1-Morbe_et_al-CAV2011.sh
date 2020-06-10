@@ -29,15 +29,15 @@ echo "#clock:size:name
 #   events is a colon-separated list of process@event
 "
 
-echo "# Fully Symbolic Model Checking for Timed Automata
-#Georges Morbé, Florian Pigorsch, and Christoph Scholl
-#Department of Computer Science, University of Freiburg,
-#{morbe, pigorsch, scholl}@informatik.uni-freiburg.de
+echo "# Model from FIG 1 from:
+# Georges Morbé, Florian Pigorsch, Christoph Scholl:
+# Fully Symbolic Model Checking for Timed Automata. CAV 2011: 616-632
 "
 
 echo "
-# Mutual exclusion between process 1 and process 2 can be verified by checking
-# ?
+# In the article above, the property verified is the accessibility
+# of a configuration where all processes are in state s1. Such a
+# configuration is accessible.
 "
 
 echo "system:toy_example_${N}
@@ -61,7 +61,7 @@ clock:1:x$pid
 location:P$pid:s0{initial:}
 location:P$pid:s1{invariant:x$pid<=5}
 location:P$pid:s2{}
-edge:P$pid:s0:s1:tau{provided:x$pid==0}
+edge:P$pid:s0:s1:tau{provided:x$pid<=5}
 edge:P$pid:s1:s2:tau{do:i=$pid}
 edge:P$pid:s2:s0:tau{provided:i==$pid : do:x$pid=0;i=0}
 "

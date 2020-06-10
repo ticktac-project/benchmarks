@@ -4,17 +4,16 @@
 	<declaration>// This file is a part of the TickTac benchmarks project.
 // See files AUTHORS and LICENSE for copyright details.
 
-// Model of Toy example extracted from:
-// Fully Symbolic Model Checking for Timed Automata 
-//Georges Morbé, Florian Pigorsch, and Christoph Scholl
-//Department of Computer Science, University of Freiburg,
-//{morbe, pigorsch, scholl}@informatik.uni-freiburg.de
+// Model of Toy example extracted from FIG 1 from:
+//Georges Morbé, Florian Pigorsch, Christoph Scholl:
+//Fully Symbolic Model Checking for Timed Automata.
+//CAV 2011: 616-632
 
 const int N = 3; // Number of processes
 
 typedef int[1,N] pid_t;
 
-int i := 0;</declaration>
+int[0,N] i := 0;</declaration>
 	<template>
 		<name x="5" y="5">P</name>
 		<parameter>pid_t id</parameter>
@@ -55,11 +54,8 @@ system P;
     </system>
 	<queries>
 		<query>
-			<formula>A[] forall (i : pid_t) forall (j : pid_t) i != j imply not (P(i).s1 and P(j).s1)</formula>
-			<comment></comment>
-		</query>
-		<query>
-			<formula>A[] !deadlock</formula>
+			<formula>A[] true
+</formula>
 			<comment></comment>
 		</query>
 	</queries>

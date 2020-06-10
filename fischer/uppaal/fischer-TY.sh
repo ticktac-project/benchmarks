@@ -9,7 +9,7 @@
 k=10
 K=10
 
-function usage() {
+usage() {
     echo "Usage: $0 N";
     echo "       $0 N k K";
     echo "       N number of processes";
