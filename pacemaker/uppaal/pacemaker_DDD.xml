@@ -24,7 +24,7 @@ const int Amaxwait = 10000;
 clock t;
 clock clk;
 
-broadcast chan AS, AP, VP, VS, Aget, Vget;</declaration>
+broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	<template>
 		<name x="5" y="5">LRI</name>
 		<declaration>// Place local declarations here.</declaration>
@@ -232,7 +232,7 @@ broadcast chan AS, AP, VP, VS, Aget, Vget;</declaration>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id8"/>
-			<label kind="synchronisation" x="136" y="153">AP!</label>
+			<label kind="synchronisation" x="136" y="153">AR!</label>
 			<nail x="178" y="170"/>
 			<nail x="178" y="93"/>
 		</transition>

@@ -25,6 +25,7 @@ system:pacemaker_DDD
 event:tau
 event:AS
 event:AP
+event:AR
 event:VP
 event:VS
 event:Aget
@@ -83,7 +84,7 @@ edge:PVARP:Idle:PVAB:VP{do:t=0}
 edge:PVARP:PVAB:PVARP:tau{provided:t>=TPVAB}
 edge:PVARP:PVARP:Idle:tau{provided:t>=TPVARP}
 edge:PVARP:PVARP:inter1:Aget
-edge:PVARP:inter1:PVARP:AP
+edge:PVARP:inter1:PVARP:AR
 edge:PVARP:Idle:inter:Aget
 edge:PVARP:inter:Idle:AS
 
@@ -132,6 +133,6 @@ edge:PURI_test:interval:wait_vp:tau{do:x3=0}
 sync:LRI@AP:AVI@AP?:RHM@AP?
 sync:AVI@VP:LRI@VP?:URI@VP?:PVARP@VP?:VRP@VP?:Pvv@VP?:PURI_test@VP?
 sync:PVARP@AS:LRI@AS?:AVI@AS?
-sync:PVARP@AP:AVI@AP?:RHM@AP?
+sync:PVARP@AR
 sync:VRP@VS:LRI@VS?:AVI@VS?:URI@VS?:PVARP@VS?:Pvv@VS?:PURI_test@VS?
 sync:RHM@Aget:PVARP@Aget?
