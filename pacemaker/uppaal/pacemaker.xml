@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// This file is a part of the TickTac benchmarks project.
+// See files AUTHORS and LICENSE for copyright details.
+
+// Inspired from UPPAAL demo model of a pacemaker DDD introduced in:
+// Zhihao Jiang, Miroslav Pajic, Salar Moarref, Rajeev Alur and Rahul Mangharam,
+// Modeling and Verification of a Dual Chamber Implantable Pacemaker,
+//pp. 188–203, 2012 
+
+const int TAVI = 150;
+const int TLRI = 1000;
+const int TPVARP = 100;
+const int TVRP = 150;
+const int TURI = 400;
+const int TPVAB = 50;
+
+clock t;
+clock clk;
+
+chan AS, AR, VP, VS, AP, Aget, Vget;</declaration>
+	<template>
+		<name x="5" y="5">LRI</name>
+		<declaration>// Place local declarations here.</declaration>
+		<location id="id0" x="0" y="0">
+			<name x="8" y="8">LRI</name>
+			<label kind="invariant" x="17" y="25">t &lt;= TLRI-TAVI</label>
+		</location>
+		<location id="id1" x="-136" y="0">
+			<name x="-153" y="17">ASed</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-76" y="-51">AS?</label>
+			<nail x="-68" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-110" y="25">VS?</label>
+			<label kind="assignment" x="-76" y="34">t = 0</label>
+			<nail x="-68" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-76" y="-17">VP?</label>
+			<label kind="assignment" x="-85" y="0">t = 0</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="76" y="-17">VS?</label>
+			<label kind="assignment" x="76" y="0">t = 0</label>
+			<nail x="67" y="-17"/>
+			<nail x="67" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-34" y="59">t &gt;= TLRI-TAVI</label>
+			<label kind="synchronisation" x="-8" y="93">AP!</label>
+			<label kind="assignment" x="-17" y="76">t = 0</label>
+			<nail x="17" y="59"/>
+			<nail x="-17" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-17" y="-93">VP?</label>
+			<label kind="assignment" x="-17" y="-76">t = 0</label>
+			<nail x="-17" y="-59"/>
+			<nail x="17" y="-59"/>
+		</transition>
+	</template>
+	<template>
+		<name>AVI</name>
+		<location id="id2" x="-8" y="0">
+			<name x="-42" y="0">Idle</name>
+		</location>
+		<location id="id3" x="161" y="0">
+			<name x="178" y="-25">AVI</name>
+			<label kind="invariant" x="178" y="-8">t &lt;= TAVI</label>
+		</location>
+		<location id="id4" x="161" y="-93">
+			<name x="178" y="-119">WaitURI</name>
+			<label kind="invariant" x="178" y="-102">clk &lt;= TURI</label>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-34" y="-136">VS?</label>
+			<nail x="161" y="-136"/>
+			<nail x="-42" y="-136"/>
+			<nail x="-42" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="0" y="102">t &gt;= TAVI &amp;&amp; clk &gt;= TURI</label>
+			<label kind="synchronisation" x="68" y="85">VP!</label>
+			<nail x="161" y="17"/>
+			<nail x="161" y="102"/>
+			<nail x="-8" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="68" y="51">VS?</label>
+			<nail x="119" y="68"/>
+			<nail x="34" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="68" y="8">AP?</label>
+			<label kind="assignment" x="59" y="34">t = 0</label>
+			<nail x="76" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="68" y="-51">AS?</label>
+			<label kind="assignment" x="59" y="-25">t = 0</label>
+			<nail x="76" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="guard" x="170" y="-59">t &gt;= TAVI &amp;&amp; clk &lt; TURI</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="guard" x="42" y="-119">clk &gt;= TURI</label>
+			<label kind="synchronisation" x="68" y="-93">VP!</label>
+			<nail x="-8" y="-93"/>
+		</transition>
+	</template>
+	<template>
+		<name>URI</name>
+		<location id="id5" x="0" y="0">
+			<name x="-8" y="-34">URI</name>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-93" y="-17">VP?</label>
+			<label kind="assignment" x="-110" y="0">clk = 0</label>
+			<nail x="-59" y="25"/>
+			<nail x="-59" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="68" y="-17">VS?</label>
+			<label kind="assignment" x="68" y="0">clk = 0</label>
+			<nail x="59" y="-25"/>
+			<nail x="59" y="25"/>
+		</transition>
+	</template>
+	<template>
+		<name>PVARP</name>
+		<location id="id6" x="-212" y="0">
+			<name x="-246" y="-25">Idle</name>
+		</location>
+		<location id="id7" x="-51" y="0">
+			<name x="-34" y="0">PVAB</name>
+			<label kind="invariant" x="-85" y="17">t &lt;= TPVAB</label>
+		</location>
+		<location id="id8" x="110" y="0">
+			<name x="127" y="-8">PVARP</name>
+			<label kind="invariant" x="136" y="8">t &lt;= TPVARP</label>
+		</location>
+		<location id="id9" x="-212" y="170">
+			<name x="-255" y="170">inter</name>
+			<committed/>
+		</location>
+		<location id="id10" x="110" y="170">
+			<name x="59" y="144">inter1</name>
+			<committed/>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-144" y="-68">VP?</label>
+			<label kind="assignment" x="-144" y="-51">t = 0</label>
+			<nail x="-178" y="-51"/>
+			<nail x="-85" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-85" y="-110">t &gt;= TPVARP</label>
+			<nail x="110" y="-93"/>
+			<nail x="-212" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-187" y="153">AS!</label>
+			<nail x="-144" y="170"/>
+			<nail x="-144" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-212" y="85">Aget?</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-144" y="-17">VS?</label>
+			<label kind="assignment" x="-144" y="0">t = 0</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-8" y="-17">t &gt;= TPVAB</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="136" y="153">AR!</label>
+			<nail x="178" y="170"/>
+			<nail x="178" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="110" y="85">Aget?</label>
+		</transition>
+	</template>
+	<system>// List one or more processes to be composed into a system.
+system LRI, AVI, URI, PVARP;
+    </system>
+	<queries>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
