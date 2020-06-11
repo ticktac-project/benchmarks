@@ -31,39 +31,40 @@ event:VS
 event:Aget
 event:Vget
 
-int:1:150:150:150:TAVI
-int:1:1000:1000:1000:TLRI
-int:1:100:100:100:TPVARP
-int:1:150:150:150:TVRP
-int:1:400:400:400:TURI
-int:1:50:50:50:TPVAB
-int:1:0:0:0:Aminwait
-int:1:10000:10000:10000:Amaxwait
-clock:1:t
+#int:1:150:150:150:TAVI
+#int:1:1000:1000:1000:TLRI
+#int:1:100:100:100:TPVARP
+#int:1:150:150:150:TVRP
+#int:1:400:400:400:TURI
+#int:1:50:50:50:TPVAB
+#int:1:0:0:0:Aminwait
+#int:1:10000:10000:10000:Amaxwait
 clock:1:clk
 
 # Process LRI
 process:LRI
-location:LRI:LRI{initial::invariant:t<=TLRI-TAVI}
+clock:1:t1
+location:LRI:LRI{initial::invariant:t1<=1000-150}
 location:LRI:Ased
-edge:LRI:LRI:LRI:AP{provided:t>=TLRI-TAVI : do:t=0}
-edge:LRI:LRI:LRI:VS{do:t=0}
-edge:LRI:LRI:LRI:VP{do:t=0}
+edge:LRI:LRI:LRI:AP{provided:t1>=1000-150 : do:t1=0}
+edge:LRI:LRI:LRI:VS{do:t1=0}
+edge:LRI:LRI:LRI:VP{do:t1=0}
 edge:LRI:LRI:Ased:AS
-edge:LRI:Ased:LRI:VP{do:t=0}
-edge:LRI:Ased:LRI:VS{do:t=0}
+edge:LRI:Ased:LRI:VP{do:t1=0}
+edge:LRI:Ased:LRI:VS{do:t1=0}
 
 # Process AVI
 process:AVI
+clock:1:t2
 location:AVI:Idle{initial:}
-location:AVI:AVI{invariant:t<=TAVI}
-location:AVI:WaitURI{invariant:clk<=TURI}
-edge:AVI:Idle:AVI:AS{do:t=0}
-edge:AVI:Idle:AVI:AP{do:t=0}
-edge:AVI:AVI:Idle:VP{provided:t>=TAVI&&clk>=TURI}
+location:AVI:AVI{invariant:t2<=150}
+location:AVI:WaitURI{invariant:clk<=400}
+edge:AVI:Idle:AVI:AS{do:t2=0}
+edge:AVI:Idle:AVI:AP{do:t2=0}
+edge:AVI:AVI:Idle:VP{provided:t2>=150&&clk>=400}
 edge:AVI:AVI:Idle:VS
-edge:AVI:AVI:WaitURI:tau{provided:t>=TAVI&&clk<TURI}
-edge:AVI:WaitURI:Idle:VP{provided:clk>=TURI}
+edge:AVI:AVI:WaitURI:tau{provided:t2>=150&&clk<400}
+edge:AVI:WaitURI:Idle:VP{provided:clk>=400}
 edge:AVI:WaitURI:Idle:VS
 
 # Process URI
@@ -74,15 +75,16 @@ edge:URI:URI:URI:VP{do:clk=0}
 
 # Process PVARP
 process:PVARP
+clock:1:t3
 location:PVARP:Idle{initial:}
 location:PVARP:inter{committed:}
-location:PVARP:PVAB{invariant:t<=TPVAB}
-location:PVARP:PVARP{invariant:t<=TPVARP}
+location:PVARP:PVAB{invariant:t3<=50}
+location:PVARP:PVARP{invariant:t3<=100}
 location:PVARP:inter1{committed:}
-edge:PVARP:Idle:PVAB:VS{do:t=0}
-edge:PVARP:Idle:PVAB:VP{do:t=0}
-edge:PVARP:PVAB:PVARP:tau{provided:t>=TPVAB}
-edge:PVARP:PVARP:Idle:tau{provided:t>=TPVARP}
+edge:PVARP:Idle:PVAB:VS{do:t3=0}
+edge:PVARP:Idle:PVAB:VP{do:t3=0}
+edge:PVARP:PVAB:PVARP:tau{provided:t3>=50}
+edge:PVARP:PVARP:Idle:tau{provided:t3>=100}
 edge:PVARP:PVARP:inter1:Aget
 edge:PVARP:inter1:PVARP:AR
 edge:PVARP:Idle:inter:Aget
@@ -90,44 +92,45 @@ edge:PVARP:inter:Idle:AS
 
 # Process VRP
 process:VRP
+clock:1:t4
 location:VRP:Idle{initial:}
 location:VRP:inter{committed:}
-location:VRP:VRP{invariant:t<=TVRP}
-edge:VRP:Idle:VRP:VP{do:t=0}
+location:VRP:VRP{invariant:t4<=150}
+edge:VRP:Idle:VRP:VP{do:t4=0}
 edge:VRP:Idle:inter:Vget
-edge:VRP:inter:VRP:VS{do:t=0}
-edge:VRP:VRP:Idle:tau{provided:t>=TVRP}
+edge:VRP:inter:VRP:VS{do:t4=0}
+edge:VRP:VRP:Idle:tau{provided:t4>=150}
 
 # Process RHM
 process:RHM
-clock:1:x1
-location:RHM:AReady{initial::invariant:x1<Amaxwait}
-edge:RHM:AReady:AReady:AP{do:x1=0}
-edge:RHM:AReady:AReady:Aget{provided:x1>Aminwait : do:x1=0}
+clock:1:t5
+location:RHM:AReady{initial::invariant:t5<10000}
+edge:RHM:AReady:AReady:AP{do:t5=0}
+edge:RHM:AReady:AReady:Aget{provided:t5>0 : do:t5=0}
 
 # Process Pvv
 process:Pvv
-clock:1:x2
+clock:1:t6
 location:Pvv:wait_1st{initial:}
 location:Pvv:wait_2nd
 location:Pvv:two_a{committed:}
-edge:Pvv:wait_1st:wait_2nd:VS{do:x2=0}
-edge:Pvv:wait_1st:wait_2nd:VP{do:x2=0}
+edge:Pvv:wait_1st:wait_2nd:VS{do:t6=0}
+edge:Pvv:wait_1st:wait_2nd:VP{do:t6=0}
 edge:Pvv:wait_2nd:two_a:VS
 edge:Pvv:wait_2nd:two_a:VP
-edge:Pvv:two_a:wait_2nd:tau{do:x2=0}
+edge:Pvv:two_a:wait_2nd:tau{do:t6=0}
 
 # Process PURI_test
 process:PURI_test
-clock:1:x3
+clock:1:t7
 location:PURI_test:wait_v{initial:}
 location:PURI_test:wait_vp
 location:PURI_test:interval{committed:}
-edge:PURI_test:wait_v:wait_vp:VP{do:x3=0}
-edge:PURI_test:wait_v:wait_vp:VS{do:x3=0}
-edge:PURI_test:wait_vp:wait_vp:VS{do:x3=0}
+edge:PURI_test:wait_v:wait_vp:VP{do:t7=0}
+edge:PURI_test:wait_v:wait_vp:VS{do:t7=0}
+edge:PURI_test:wait_vp:wait_vp:VS{do:t7=0}
 edge:PURI_test:wait_vp:interval:VP
-edge:PURI_test:interval:wait_vp:tau{do:x3=0}
+edge:PURI_test:interval:wait_vp:tau{do:t7=0}
 
 # Synchros
 sync:LRI@AP:AVI@AP?:RHM@AP?

@@ -21,13 +21,12 @@ const int TPVAB = 50;
 const int Aminwait = 0; 
 const int Amaxwait = 10000; 
 
-clock t;
 clock clk;
 
 broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	<template>
 		<name x="5" y="5">LRI</name>
-		<declaration>// Place local declarations here.</declaration>
+		<declaration>clock t;</declaration>
 		<location id="id0" x="0" y="0">
 			<name x="8" y="8">LRI</name>
 			<label kind="invariant" x="17" y="25">t &lt;= TLRI-TAVI</label>
@@ -83,6 +82,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	</template>
 	<template>
 		<name>AVI</name>
+		<declaration>clock t;</declaration>
 		<location id="id2" x="-8" y="0">
 			<name x="-42" y="0">Idle</name>
 		</location>
@@ -171,6 +171,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	</template>
 	<template>
 		<name>PVARP</name>
+		<declaration>clock t;</declaration>
 		<location id="id6" x="-212" y="0">
 			<name x="-246" y="-25">Idle</name>
 		</location>
@@ -244,6 +245,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	</template>
 	<template>
 		<name>VRP</name>
+		<declaration>clock t;</declaration>
 		<location id="id11" x="-153" y="0">
 			<name x="-195" y="-8">Idle</name>
 		</location>
@@ -282,18 +284,18 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 	</template>
 	<template>
 		<name>RHM</name>
-		<declaration>clock x;</declaration>
+		<declaration>clock t;</declaration>
 		<location id="id14" x="0" y="0">
 			<name x="-25" y="-34">AReady</name>
-			<label kind="invariant" x="-25" y="-51">x &lt; Amaxwait</label>
+			<label kind="invariant" x="-25" y="-51">t &lt; Amaxwait</label>
 		</location>
 		<init ref="id14"/>
 		<transition>
 			<source ref="id14"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-144" y="-34">x &gt; Aminwait</label>
+			<label kind="guard" x="-144" y="-34">t &gt; Aminwait</label>
 			<label kind="synchronisation" x="-102" y="-17">Aget!</label>
-			<label kind="assignment" x="-102" y="0">x = 0</label>
+			<label kind="assignment" x="-102" y="0">t = 0</label>
 			<nail x="-59" y="25"/>
 			<nail x="-59" y="-25"/>
 		</transition>
@@ -301,14 +303,14 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 			<source ref="id14"/>
 			<target ref="id14"/>
 			<label kind="synchronisation" x="68" y="-17">AP?</label>
-			<label kind="assignment" x="68" y="0">x = 0</label>
+			<label kind="assignment" x="68" y="0">t = 0</label>
 			<nail x="59" y="25"/>
 			<nail x="59" y="-25"/>
 		</transition>
 	</template>
 	<template>
 		<name>Pvv</name>
-		<declaration>clock x;</declaration>
+		<declaration>clock t;</declaration>
 		<location id="id15" x="-229" y="0">
 			<name x="-255" y="-34">wait_1st</name>
 		</location>
@@ -323,7 +325,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 		<transition>
 			<source ref="id17"/>
 			<target ref="id16"/>
-			<label kind="assignment" x="-8" y="42">x = 0</label>
+			<label kind="assignment" x="-8" y="42">t = 0</label>
 			<nail x="76" y="59"/>
 			<nail x="-76" y="59"/>
 		</transition>
@@ -337,7 +339,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 			<source ref="id15"/>
 			<target ref="id16"/>
 			<label kind="synchronisation" x="-161" y="8">VP?</label>
-			<label kind="assignment" x="-161" y="34">x = 0</label>
+			<label kind="assignment" x="-161" y="34">t = 0</label>
 			<nail x="-153" y="34"/>
 		</transition>
 		<transition>
@@ -350,13 +352,13 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 			<source ref="id15"/>
 			<target ref="id16"/>
 			<label kind="synchronisation" x="-161" y="-51">VS?</label>
-			<label kind="assignment" x="-161" y="-25">x = 0</label>
+			<label kind="assignment" x="-161" y="-25">t = 0</label>
 			<nail x="-153" y="-34"/>
 		</transition>
 	</template>
 	<template>
 		<name>PURI_test</name>
-		<declaration>clock x;</declaration>
+		<declaration>clock t;</declaration>
 		<location id="id18" x="-229" y="-8">
 			<name x="-246" y="-42">wait_v</name>
 		</location>
@@ -371,7 +373,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id19"/>
-			<label kind="assignment" x="8" y="42">x = 0</label>
+			<label kind="assignment" x="8" y="42">t = 0</label>
 			<nail x="68" y="59"/>
 			<nail x="-25" y="59"/>
 		</transition>
@@ -379,7 +381,7 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 			<source ref="id19"/>
 			<target ref="id19"/>
 			<label kind="synchronisation" x="-85" y="25">VS?</label>
-			<label kind="assignment" x="-85" y="42">x = 0</label>
+			<label kind="assignment" x="-85" y="42">t = 0</label>
 			<nail x="-140" y="42"/>
 			<nail x="-97" y="68"/>
 		</transition>
@@ -387,14 +389,14 @@ broadcast chan AS, AP, AR, VP, VS, Aget, Vget;</declaration>
 			<source ref="id18"/>
 			<target ref="id19"/>
 			<label kind="synchronisation" x="-212" y="8">VS?</label>
-			<label kind="assignment" x="-212" y="25">x = 0</label>
+			<label kind="assignment" x="-212" y="25">t = 0</label>
 			<nail x="-153" y="17"/>
 		</transition>
 		<transition>
 			<source ref="id18"/>
 			<target ref="id19"/>
 			<label kind="synchronisation" x="-161" y="-51">VP?</label>
-			<label kind="assignment" x="-170" y="-25">x = 0</label>
+			<label kind="assignment" x="-170" y="-25">t = 0</label>
 			<nail x="-153" y="-34"/>
 		</transition>
 		<transition>
@@ -412,11 +414,11 @@ system LRI, AVI, URI, PVARP, VRP, RHM, Pvv, PURI_test;
 			<comment></comment>
 		</query>
 		<query>
-			<formula>A[] (Pvv.two_a imply Pvv.x&lt;=TLRI)</formula>
+			<formula>A[] (Pvv.two_a imply Pvv.t&lt;=TLRI)</formula>
 			<comment></comment>
 		</query>
 		<query>
-			<formula>A[] (PURI_test.interval imply PURI_test.x&gt;=TURI)</formula>
+			<formula>A[] (PURI_test.interval imply PURI_test.t&gt;=TURI)</formula>
 			<comment></comment>
 		</query>
 	</queries>
