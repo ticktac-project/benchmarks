@@ -32,7 +32,7 @@ event:Aget
 event:Vget
 
 int:1:150:150:150:TAVI
-int:1:10000:10000:10000:TLRI
+int:1:1000:1000:1000:TLRI
 int:1:100:100:100:TPVARP
 int:1:150:150:150:TVRP
 int:1:400:400:400:TURI
@@ -133,6 +133,5 @@ edge:PURI_test:interval:wait_vp:tau{do:x3=0}
 sync:LRI@AP:AVI@AP?:RHM@AP?
 sync:AVI@VP:LRI@VP?:URI@VP?:PVARP@VP?:VRP@VP?:Pvv@VP?:PURI_test@VP?
 sync:PVARP@AS:LRI@AS?:AVI@AS?
-sync:PVARP@AR
 sync:VRP@VS:LRI@VS?:AVI@VS?:URI@VS?:PVARP@VS?:Pvv@VS?:PURI_test@VS?
 sync:RHM@Aget:PVARP@Aget?
