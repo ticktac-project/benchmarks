@@ -52,7 +52,7 @@ clock:1:clk
 process:LRI_MS
 clock:1:t1
 location:LRI_MS:LRI{initial::invariant:t1<=1000-150}
-location:LRI_MS:VDI_LRI{t1<=1000}
+location:LRI_MS:VDI_LRI{invariant:t1<=1000}
 location:LRI_MS:aSensed
 edge:LRI_MS:LRI:LRI:AP{provided:t1>=1000-150 : do:t1=0}
 edge:LRI_MS:LRI:LRI:VS{do:t1=0}
@@ -61,10 +61,10 @@ edge:LRI_MS:LRI:VDI_LRI:VDI
 edge:LRI_MS:VDI_LRI:LRI:DDD{do:t1=0}
 edge:LRI_MS:VDI_LRI:VDI_LRI:VS{do:t1=0}
 edge:LRI_MS:VDI_LRI:VDI_LRI:VP{provided:t1>=1000 : do:t1=0}
-edge:LRI_MS:aSensed:VDI_LRRI:VDI
-edge:LRI_MS:aSensed:VDI_LRRI:VP{do:t1=0}
-edge:LRI_MS:aSensed:VDI_LRRI:VS{do:t1=0}
-edge:LRI_MS:VDI_LRRI:aSensed:AS
+edge:LRI_MS:aSensed:VDI_LRI:VDI
+edge:LRI_MS:aSensed:VDI_LRI:VP{do:t1=0}
+edge:LRI_MS:aSensed:VDI_LRI:VS{do:t1=0}
+edge:LRI_MS:VDI_LRI:aSensed:AS
 
 # Process AVI_MS
 process:AVI_MS
@@ -144,8 +144,8 @@ edge:Pv_v:wait_1st:wait_2nd:VS{do:t6=0}
 edge:Pv_v:wait_1st:wait_2nd:VP{do:t6=0}
 edge:Pv_v:wait_2nd:two_v:VS
 edge:Pv_v:wait_2nd:two_v:VP
-edge:Pv_v:two_v:wait_2nd:tau{provided:t<=400 : do:t6=0}
-edge:Pv_v:two_v:err:tau{provided:t>400}
+edge:Pv_v:two_v:wait_2nd:tau{provided:t6<=400 : do:t6=0}
+edge:Pv_v:two_v:err:tau{provided:t6>400}
 
 # Process PURI_test
 process:PURI_test
