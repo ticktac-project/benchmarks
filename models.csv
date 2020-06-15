@@ -6,6 +6,8 @@ csmacd/uppaal/csmacd.sh,Model of the CSMA/CD protocol,TA UPPAAL
 csmacd/uppaal/csmacd-fixed.sh,Model of the CSMA/CD protocol with missing transition added,TA UPPAAL
 fddi/tchecker/fddi.sh,Model of the FDDI protocol,TA TChecker
 fddi/uppaal/fddi.sh,Model of the FDDI protocol,TA UPPAAL
+fig1-Morbe_et_al-CAV2011/tchecker/fig1-Morbe_et_al-CAV2011.sh,Model of Figure 1 in Morbé et al CAV 2011,TA TChecker
+fig1-Morbe_et_al-CAV2011/uppaal/fig1-Morbe_et_al-CAV2011.sh,Model of Figure 1 in Morbé et al CAV 2011,TA UPPAAL
 fischer/tchecker/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version), TA TChecker Correct
 fischer/tchecker/fischer-TY.sh,Model of the Fischer's protocol (Tripakis&Yovine's version),TA TChecker
 fischer/uppaal/fischer.sh,Model of the Fischer's protocol (UPPAAL demo version),TA UPPAAL Correct
