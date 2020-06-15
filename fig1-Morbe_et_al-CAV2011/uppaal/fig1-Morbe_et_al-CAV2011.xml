@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// This file is a part of the TickTac benchmarks project.
+// See files AUTHORS and LICENSE for copyright details.
+
+// Model of Toy example extracted from FIG 1 from:
+//Georges Morbé, Florian Pigorsch, Christoph Scholl:
+//Fully Symbolic Model Checking for Timed Automata.
+//CAV 2011: 616-632
+
+const int N = 3; // Number of processes
+
+typedef int[1,N] pid_t;
+
+int[0,N] i := 0;</declaration>
+	<template>
+		<name x="5" y="5">P</name>
+		<parameter>pid_t id</parameter>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="-136" y="-127">
+			<name x="-146" y="-161">s0</name>
+		</location>
+		<location id="id1" x="59" y="-127">
+			<name x="49" y="-161">s1</name>
+			<label kind="invariant" x="49" y="-110">x &lt;= 5</label>
+		</location>
+		<location id="id2" x="-42" y="-17">
+			<name x="-51" y="-51">s2</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-144" y="-85">i == id</label>
+			<label kind="assignment" x="-127" y="-68">i := 0,
+x := 0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="17" y="-68">i := id</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-59" y="-153">x &lt;= 5</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+// List one or more processes to be composed into a system.
+system P;
+    </system>
+	<queries>
+		<query>
+			<formula>A[] true
+</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
