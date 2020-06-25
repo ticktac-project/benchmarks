@@ -14,3 +14,5 @@ rt-sat/generate.sh uppaal sat,Real-time satisfiability,TA UPPAAL Correct 10.1007
 rt-sat/generate.sh uppaal unsat,Real-time satisfiability,TA UPPAAL 10.1007/978-3-030-25540-4_2
 rt-sat/generate.sh tchecker sat,Real-time satisfiability,TA TChecker Correct 10.1007/978-3-030-25540-4_2
 rt-sat/generate.sh tchecker unsat,Real-time satisfiability,TA TChecker 10.1007/978-3-030-25540-4_2
+arbiter_tree/tchecker/arbiter_tree.sh, Model introduced in Section 5 in Martin Wehrle, Sebastian Kupferschmid: Mcta: Heuristics and Search for Timed Systems. FORMATS 2012: 252-266
+arbiter_tree/uppaal/arbiter_tree.sh, Model introduced in Section 5 in Martin Wehrle, Sebastian Kupferschmid: Mcta: Heuristics and Search for Timed Systems. FORMATS 2012: 252-266
