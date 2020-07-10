@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Inspired from the mutual exclusion protocol introduced in:
+// Henning Dierks:
+// Comparing model checking and logical reasoning for real-time systems. Formal Asp.
+// Comput. 16(2): 104-120 (2004)
+
+const int N = 2;        // Number of processes
+const int CYCLE = 1;   // Time of a cycle in a state
+const int MUTEX_DELAY = 2; // upper bound of y
+typedef int[1,N] pid_t;
+
+chan set_g[pid_t];
+chan set_not_g[pid_t];
+chan set_safe[pid_t];
+chan set_unsafe[pid_t];
+chan poll_g[pid_t];
+chan poll_not_g[pid_t];
+chan poll_safe[pid_t];
+chan poll_unsafe[pid_t];</declaration>
+	<template>
+		<name x="5" y="5">InOut</name>
+		<declaration>// NB: outputs w1 and w2 are modeled as g[1]=false and g[2]=false
+bool g[pid_t];     // input/output g/!g for process i
+bool safe[pid_t];  // input/output safe/unsafe for process i
+clock x;</declaration>
+		<location id="id0" x="-535" y="-391">
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-901" y="-357">i : pid_t</label>
+			<label kind="guard" x="-841" y="-357">safe[i]==false &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-680" y="-357">poll_unsafe[i]?</label>
+			<nail x="-586" y="-357"/>
+			<nail x="-569" y="-340"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-884" y="-399">i : pid_t</label>
+			<label kind="guard" x="-824" y="-399">safe[i]==true &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-671" y="-399">poll_safe[i]?</label>
+			<nail x="-586" y="-399"/>
+			<nail x="-586" y="-382"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-552" y="-331">i : pid_t</label>
+			<label kind="guard" x="-629" y="-314">g[i]==false &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-586" y="-297">poll_not_g[i]?</label>
+			<nail x="-527" y="-340"/>
+			<nail x="-544" y="-340"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-484" y="-357">i : pid_t</label>
+			<label kind="guard" x="-425" y="-357">g[i]==true &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-289" y="-357">poll_g[i]?</label>
+			<nail x="-485" y="-357"/>
+			<nail x="-501" y="-340"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-475" y="-399">i : pid_t</label>
+			<label kind="synchronisation" x="-416" y="-399">set_unsafe[i]?</label>
+			<label kind="assignment" x="-314" y="-399">safe[i]:=false, x:=0</label>
+			<nail x="-484" y="-399"/>
+			<nail x="-484" y="-382"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-484" y="-451">i : pid_t</label>
+			<label kind="synchronisation" x="-425" y="-451">set_safe[i]?</label>
+			<label kind="assignment" x="-340" y="-451">safe[i]:=true, x:=0</label>
+			<nail x="-501" y="-442"/>
+			<nail x="-484" y="-425"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-569" y="-518">i : pid_t</label>
+			<label kind="synchronisation" x="-569" y="-501">set_not_g[i]?</label>
+			<label kind="assignment" x="-569" y="-484">g[i]:=false, x:=0</label>
+			<nail x="-544" y="-450"/>
+			<nail x="-527" y="-450"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-680" y="-484">i : pid_t</label>
+			<label kind="synchronisation" x="-680" y="-467">set_g[i]?</label>
+			<label kind="assignment" x="-680" y="-450">g[i]:=true, x:=0</label>
+			<nail x="-586" y="-425"/>
+			<nail x="-569" y="-442"/>
+		</transition>
+	</template>
+	<template>
+		<name>A</name>
+		<parameter>pid_t pid</parameter>
+		<declaration>int[0,3] pc := 0;   // program counter
+bool polled_g := true; // polled value of input g
+clock y;
+clock z;</declaration>
+		<location id="id1" x="-136" y="59">
+			<name x="-195" y="17">Unsafe</name>
+			<label kind="invariant" x="-119" y="17">z&lt;=CYCLE</label>
+		</location>
+		<location id="id2" x="-136" y="-161">
+			<name x="-178" y="-178">Safe</name>
+			<label kind="invariant" x="-221" y="-161">z&lt;=CYCLE</label>
+		</location>
+		<location id="id3" x="-331" y="-161">
+			<committed/>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-238" y="-76">pc==3</label>
+			<label kind="synchronisation" x="-280" y="-59">set_safe[pid]!</label>
+			<label kind="assignment" x="-306" y="-42">pc:=0, y:=0, z:=0</label>
+			<nail x="-178" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-263" y="43">pc==3</label>
+			<label kind="assignment" x="-297" y="60">pc:=0, z:=0</label>
+			<nail x="-195" y="34"/>
+			<nail x="-195" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-93" y="-85">pc==3 &amp;&amp; polled_g==true</label>
+			<label kind="synchronisation" x="-93" y="-68">set_unsafe[pid]!</label>
+			<label kind="assignment" x="-93" y="-51">pc:=0, y:=0, z:=0</label>
+			<nail x="-102" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-85" y="-170">pc==3 &amp;&amp; polled_g==false</label>
+			<label kind="assignment" x="-85" y="-153">pc:=0, z:=0</label>
+			<nail x="-93" y="-161"/>
+			<nail x="-93" y="-144"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-68" y="51">pc==1</label>
+			<label kind="assignment" x="-17" y="51">pc:=3</label>
+			<nail x="-76" y="34"/>
+			<nail x="-76" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-93" y="-195">pc==1</label>
+			<label kind="assignment" x="-42" y="-195">pc:=3</label>
+			<nail x="-102" y="-195"/>
+			<nail x="-93" y="-178"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-127" y="119">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-127" y="136">poll_not_g[pid]!</label>
+			<label kind="assignment" x="-127" y="153">pc:=1,polled_g:=false</label>
+			<nail x="-110" y="119"/>
+			<nail x="-85" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-272" y="127">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-246" y="144">poll_g[pid]!</label>
+			<label kind="assignment" x="-323" y="161">pc:=1, polled_g:=true</label>
+			<nail x="-153" y="119"/>
+			<nail x="-178" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-136" y="-263">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-136" y="-246">poll_not_g[pid]!</label>
+			<label kind="assignment" x="-136" y="-229">pc:=1,polled_g:=false</label>
+			<nail x="-136" y="-212"/>
+			<nail x="-119" y="-212"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-306" y="-263">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-306" y="-246">poll_g[pid]!</label>
+			<label kind="assignment" x="-306" y="-229">pc:=1,polled_g:=true</label>
+			<nail x="-170" y="-204"/>
+			<nail x="-153" y="-212"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-289" y="-187">set_safe[pid]!</label>
+		</transition>
+	</template>
+	<template>
+		<name>Ctrl</name>
+		<declaration>int[0,3] pc := 0;   // program counter
+bool polled_safe := true; // polled value of input safe
+clock y;
+clock z;
+pid_t pid := 1;
+</declaration>
+		<location id="id4" x="612" y="59">
+			<committed/>
+		</location>
+		<location id="id5" x="425" y="-221">
+			<name x="399" y="-212">G</name>
+			<label kind="invariant" x="348" y="-195">z&lt;=CYCLE</label>
+		</location>
+		<location id="id6" x="102" y="59">
+			<name x="120" y="34">C</name>
+			<label kind="invariant" x="119" y="17">z&lt;=CYCLE</label>
+		</location>
+		<location id="id7" x="425" y="59">
+			<name x="399" y="8">W</name>
+			<label kind="invariant" x="348" y="25">z&lt;=CYCLE</label>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-25" y="-221">pc==3 &amp;&amp; polled_safe==true</label>
+			<label kind="synchronisation" x="68" y="-204">set_g[pid%N+1]!</label>
+			<label kind="assignment" x="-42" y="-187">pc:=0, pid:=pid%N+1, y:=0, z:=0</label>
+			<nail x="178" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id7"/>
+			<label kind="guard" x="433" y="-110">pc==3 &amp;&amp; polled_safe==false</label>
+			<label kind="synchronisation" x="433" y="-93">set_not_g[pid]!</label>
+			<label kind="assignment" x="433" y="-76">pc:=0, y:=0, z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="501" y="-212">pc==3 &amp;&amp; polled_safe==true</label>
+			<label kind="assignment" x="501" y="-195">pc:=0, z:=0</label>
+			<nail x="493" y="-204"/>
+			<nail x="476" y="-178"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="510" y="-263">pc==1</label>
+			<label kind="assignment" x="510" y="-246">pc:=3</label>
+			<nail x="493" y="-255"/>
+			<nail x="502" y="-229"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="459" y="-348">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="459" y="-331">poll_unsafe[pid]!</label>
+			<label kind="assignment" x="459" y="-314">pc:=1, polled_safe:=false</label>
+			<nail x="450" y="-289"/>
+			<nail x="476" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="280" y="-348">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="280" y="-331">poll_safe[pid]!</label>
+			<label kind="assignment" x="280" y="-310">pc:=1, polled_safe:=true</label>
+			<nail x="391" y="-281"/>
+			<nail x="425" y="-289"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="guard" x="170" y="0">pc==3 &amp;&amp; polled_safe==false</label>
+			<label kind="assignment" x="221" y="17">pc:=0, z:=0, y:=0</label>
+			<nail x="272" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-33" y="-8">pc==2</label>
+			<label kind="assignment" x="-58" y="8">pc:=0, z:=0</label>
+			<nail x="9" y="25"/>
+			<nail x="26" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-186" y="42">pc==1 &amp;&amp; polled_safe==false</label>
+			<label kind="assignment" x="-75" y="59">pc:=3</label>
+			<nail x="85" y="59"/>
+			<nail x="9" y="68"/>
+			<nail x="8" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-290" y="85">pc==1 &amp;&amp; y&gt;MUTEX_DELAY &amp;&amp; polled_safe==true</label>
+			<label kind="assignment" x="-76" y="101">pc:=3</label>
+			<nail x="93" y="67"/>
+			<nail x="17" y="102"/>
+			<nail x="8" y="75"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-272" y="127">pc==1 &amp;&amp; y&lt;=MUTEX_DELAY &amp;&amp; polled_safe==true</label>
+			<label kind="assignment" x="-59" y="145">pc:=2</label>
+			<nail x="51" y="136"/>
+			<nail x="25" y="110"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="35" y="144">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="18" y="161">poll_unsafe[pid]!</label>
+			<label kind="assignment" x="1" y="178">pc:=1, polled_safe:=false</label>
+			<nail x="102" y="144"/>
+			<nail x="68" y="136"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="guard" x="145" y="127">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="145" y="144">poll_safe[pid]!</label>
+			<label kind="assignment" x="145" y="161">pc:=1, polled_safe:=true</label>
+			<nail x="153" y="127"/>
+			<nail x="119" y="144"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id6"/>
+			<label kind="guard" x="161" y="93">pc==3 &amp;&amp; polled_safe==true</label>
+			<label kind="assignment" x="203" y="110">pc:=0, y:=0, z:=0</label>
+			<nail x="271" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="450" y="-42">pc==3 &amp;&amp; polled_safe==false</label>
+			<label kind="assignment" x="450" y="-25">pc:=0, z:=0</label>
+			<nail x="450" y="0"/>
+			<nail x="476" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="348" y="110">pc==1</label>
+			<label kind="assignment" x="340" y="127">pc:=3</label>
+			<nail x="383" y="110"/>
+			<nail x="366" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="391" y="119">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="382" y="136">poll_unsafe[pid]!</label>
+			<label kind="assignment" x="365" y="153">pc:=1, polled_safe:=false</label>
+			<nail x="434" y="119"/>
+			<nail x="408" y="119"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="493" y="76">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="493" y="93">poll_safe[pid]!</label>
+			<label kind="assignment" x="493" y="110">pc:=1, polled_safe:=true</label>
+			<nail x="485" y="93"/>
+			<nail x="460" y="110"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="467" y="34">set_not_g[pid]!</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+system InOut, A, Ctrl;
+    </system>
+	<queries>
+		<query>
+			<formula>A[] forall (i : pid_t) forall (j : pid_t) i != j imply not (A(i).Unsafe and A(j).Unsafe)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
