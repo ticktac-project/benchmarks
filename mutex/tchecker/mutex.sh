@@ -42,8 +42,8 @@ echo "#clock:size:name
 #   events is a colon-separated list of process@event
 "
 
-echo "# Model of Fischer's protocol introduced in:
-# Henning Dierks:
+echo "# Inspired from the direct translation of the PLC automata
+# model of the mutual exclusion protocol in Figures 2 and 4 from Henning Dierks:
 # Comparing model checking and logical reasoning for real-time systems. Formal Asp.
 # Comput. 16(2): 104-120 (2004)
 "

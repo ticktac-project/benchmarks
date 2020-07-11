@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
-	<declaration>// Inspired from the mutual exclusion protocol introduced in:
-// Henning Dierks:
+	<declaration>// Inspired from the direct translation of the PLC automata
+	// model of the mutual exclusion protocol in
+// Figures 2 and 4 from Henning Dierks:
 // Comparing model checking and logical reasoning for real-time systems. Formal Asp.
 // Comput. 16(2): 104-120 (2004)
 
