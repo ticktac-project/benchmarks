@@ -100,8 +100,8 @@ clock:1:z$pid
 int:1:0:1:1:polled_g$pid
 int:1:0:3:0:pc$pid
 location:A$pid:init{initial: : committed:}
-location:A$pid:Safe{invariant:z$pid<=$CYCLE}
-location:A$pid:Unsafe{invariant:z$pid<=$CYCLE}
+location:A$pid:Safe{invariant:z$pid<$CYCLE}
+location:A$pid:Unsafe{invariant:z$pid<$CYCLE}
 edge:A$pid:init:Safe:set_safe$pid
 edge:A$pid:Safe:Safe:poll_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=1}
 edge:A$pid:Safe:Safe:poll_not_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=0}
@@ -124,9 +124,9 @@ int:1:0:1:1:polled_safe
 int:1:0:3:0:pc
 location:Ctrl:init{initial: : committed:}"
 for pid in `seq 1 $N`; do
-echo "location:Ctrl:W$pid{invariant:z<=$CYCLE}
-location:Ctrl:C$pid{invariant:z<=$CYCLE}
-location:Ctrl:G$pid{invariant:z<=$CYCLE}"
+echo "location:Ctrl:W$pid{invariant:z<$CYCLE}
+location:Ctrl:C$pid{invariant:z<$CYCLE}
+location:Ctrl:G$pid{invariant:z<$CYCLE}"
 done
 echo "edge:Ctrl:init:W$pid:set_not_g1"
 for pid in `seq 1 $N`; do

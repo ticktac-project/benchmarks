@@ -2,10 +2,9 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Inspired from the direct translation of the PLC automata
-	// model of the mutual exclusion protocol in
-// Figures 2 and 4 from Henning Dierks:
-// Comparing model checking and logical reasoning for real-time systems. Formal Asp.
-// Comput. 16(2): 104-120 (2004)
+// model of the mutual exclusion protocol in Figures 2 and 4 from
+// Henning Dierks: Comparing model checking and logical reasoning
+// for real-time systems. Formal Asp. Comput. 16(2): 104-120 (2004)
 
 const int N = 2;        // Number of processes
 const int CYCLE = 1;   // Time of a cycle in a state
@@ -111,11 +110,11 @@ clock y;
 clock z;</declaration>
 		<location id="id1" x="-136" y="59">
 			<name x="-195" y="17">Unsafe</name>
-			<label kind="invariant" x="-119" y="17">z&lt;=CYCLE</label>
+			<label kind="invariant" x="-119" y="17">z&lt;CYCLE</label>
 		</location>
 		<location id="id2" x="-136" y="-161">
 			<name x="-178" y="-178">Safe</name>
-			<label kind="invariant" x="-221" y="-161">z&lt;=CYCLE</label>
+			<label kind="invariant" x="-221" y="-161">z&lt;CYCLE</label>
 		</location>
 		<location id="id3" x="-331" y="-161">
 			<committed/>
@@ -224,15 +223,15 @@ pid_t pid := 1;
 		</location>
 		<location id="id5" x="425" y="-221">
 			<name x="399" y="-212">G</name>
-			<label kind="invariant" x="348" y="-195">z&lt;=CYCLE</label>
+			<label kind="invariant" x="348" y="-195">z&lt;CYCLE</label>
 		</location>
 		<location id="id6" x="102" y="59">
 			<name x="120" y="34">C</name>
-			<label kind="invariant" x="119" y="17">z&lt;=CYCLE</label>
+			<label kind="invariant" x="119" y="17">z&lt;CYCLE</label>
 		</location>
 		<location id="id7" x="425" y="59">
 			<name x="399" y="8">W</name>
-			<label kind="invariant" x="348" y="25">z&lt;=CYCLE</label>
+			<label kind="invariant" x="348" y="25">z&lt;CYCLE</label>
 		</location>
 		<init ref="id4"/>
 		<transition>
@@ -396,6 +395,12 @@ system InOut, A, Ctrl;
 	<queries>
 		<query>
 			<formula>A[] forall (i : pid_t) forall (j : pid_t) i != j imply not (A(i).Unsafe and A(j).Unsafe)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] !deadlock
 			</formula>
 			<comment>
 			</comment>
