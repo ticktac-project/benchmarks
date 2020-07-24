@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Inspired from the model introduced in Section 3.3.3 in
+// Henning Dierks, "Time, Abstraction and Heuristics",
+// Habilitation Thesis, Department of Computer Science,
+// University of Oldenburg, 2005 (http://www.avacs.org/Publikationen/Open/dierks05.pdf)
+// In this model, N trains can enter the criticical section from N different tracks.
+// The way they enter the critical section is fixed.
+
+const int N = 2;        // Number of processes
+const int CYCLE = 1;   // Time of a cycle in a state
+const int MUTEX_DELAY = 2; // Upper bound of y in Ctrl
+typedef int[1,N] pid_t;
+
+chan set_drive[pid_t], set_not_drive[pid_t];
+chan poll_EC[pid_t], poll_not_EC[pid_t];
+chan poll_EC_drive[pid_t], poll_not_EC_drive[pid_t], poll_EC_not_drive[pid_t], poll_not_EC_not_drive[pid_t];
+broadcast chan go;</declaration>
+	<template>
+		<name>InOut</name>
+		<declaration>bool EC[pid_t]; // Input CL[i] from paper corresponds to !EC[i]
+bool drive[pid_t]; // Output drive[i] of process Ctrl
+clock x;
+
+void initialize()
+{
+  for (i : pid_t) {
+    EC[i] := false;
+    drive[i] := false;
+  }
+}</declaration>
+		<location id="id0" x="0" y="187">
+			<urgent/>
+		</location>
+		<location id="id1" x="0" y="0">
+			<name x="17" y="17">L</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="0" y="119">go!</label>
+			<label kind="assignment" x="0" y="136">initialize()</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="-441" y="-136">i : pid_t</label>
+			<label kind="guard" x="-382" y="-136">!EC[i] &amp;&amp; !drive[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-204" y="-136">poll_not_EC_not_drive[i]?</label>
+			<nail x="-51" y="-102"/>
+			<nail x="-26" y="-110"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="-458" y="-76">i : pid_t</label>
+			<label kind="guard" x="-399" y="-76">EC[i] &amp;&amp; !drive[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-238" y="-76">poll_EC_not_drive[i]?</label>
+			<nail x="-102" y="-51"/>
+			<nail x="-85" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="-501" y="-17">i : pid_t</label>
+			<label kind="guard" x="-442" y="-17">!EC[i] &amp;&amp; drive[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-272" y="-17">poll_not_EC_drive[i]?</label>
+			<nail x="-110" y="8"/>
+			<nail x="-110" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="-416" y="50">i : pid_t</label>
+			<label kind="guard" x="-357" y="51">EC[i] &amp;&amp; drive[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-195" y="51">poll_EC_drive[i]?</label>
+			<nail x="-76" y="68"/>
+			<nail x="-93" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="-264" y="101">i : pid_t</label>
+			<label kind="guard" x="-213" y="102">!EC[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="-119" y="102">poll_not_EC[i]?</label>
+			<nail x="-17" y="93"/>
+			<nail x="-42" y="85"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="51" y="85">i : pid_t</label>
+			<label kind="guard" x="110" y="85">EC[i] &amp;&amp; x&gt;0</label>
+			<label kind="synchronisation" x="204" y="85">poll_EC[i]?</label>
+			<nail x="51" y="85"/>
+			<nail x="25" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="110" y="34">i : pid_t</label>
+			<label kind="assignment" x="170" y="34">EC[i]:=false</label>
+			<nail x="102" y="34"/>
+			<nail x="85" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="110" y="-25">i : pid_t</label>
+			<label kind="assignment" x="170" y="-25">EC[i]:=true</label>
+			<nail x="102" y="-25"/>
+			<nail x="102" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="101" y="-76">i : pid_t</label>
+			<label kind="synchronisation" x="152" y="-76">set_not_drive[i]?</label>
+			<label kind="assignment" x="271" y="-76">drive[i]:=false,x:=0</label>
+			<nail x="76" y="-85"/>
+			<nail x="93" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="select" x="42" y="-127">i : pid_t</label>
+			<label kind="synchronisation" x="102" y="-127">set_drive[i]?</label>
+			<label kind="assignment" x="187" y="-127">drive[i]:=true,x:=0</label>
+			<nail x="17" y="-110"/>
+			<nail x="42" y="-102"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">A</name>
+		<parameter>pid_t pid</parameter>
+		<declaration>int[0,3] pc := 0;   // program counter
+bool polled_drive := false; // polled value of input drive
+bool polled_EC := false; // polled value of input EC
+clock y;
+clock z;</declaration>
+		<location id="id2" x="-314" y="-187">
+			<urgent/>
+		</location>
+		<location id="id3" x="-161" y="-187">
+			<name x="-170" y="-170">Stop</name>
+			<label kind="invariant" x="-187" y="-153">z&lt;CYCLE</label>
+		</location>
+		<location id="id4" x="42" y="17">
+			<name x="32" y="-17">Wait</name>
+			<label kind="invariant" x="17" y="-34">z&lt;CYCLE</label>
+		</location>
+		<location id="id5" x="246" y="-187">
+			<name x="238" y="-170">Go</name>
+			<label kind="invariant" x="212" y="-153">z&lt;CYCLE</label>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id3"/>
+			<label kind="guard" x="8" y="-229">pc==3 &amp;&amp; !polled_drive</label>
+			<label kind="assignment" x="8" y="-212">pc:=0,y:=0,z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="59" y="-297">pc==3 &amp;&amp; polled_drive</label>
+			<label kind="assignment" x="170" y="-280">pc:=0,z:=0</label>
+			<nail x="229" y="-263"/>
+			<nail x="204" y="-255"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="246" y="-306">pc==1</label>
+			<label kind="assignment" x="246" y="-289">pc:=3</label>
+			<nail x="272" y="-263"/>
+			<nail x="246" y="-263"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="314" y="-297">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="314" y="-280">poll_not_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="314" y="-263">pc:=1,polled_EC:=false,polled_drive:=false</label>
+			<nail x="306" y="-238"/>
+			<nail x="289" y="-255"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="331" y="-246">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="331" y="-229">poll_not_EC_drive[pid]!</label>
+			<label kind="assignment" x="331" y="-212">pc:=1,polled_EC:=false,polled_drive:=true</label>
+			<nail x="323" y="-204"/>
+			<nail x="314" y="-229"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="331" y="-187">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="323" y="-170">poll_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="323" y="-153">pc:=1,polled_EC:=true,polled_drive:=false</label>
+			<nail x="314" y="-161"/>
+			<nail x="323" y="-187"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="guard" x="297" y="-136">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="280" y="-119">poll_EC_drive[pid]!</label>
+			<label kind="assignment" x="263" y="-102">pc:=1,polled_EC:=true,polled_drive:=true</label>
+			<nail x="289" y="-127"/>
+			<nail x="306" y="-144"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="127" y="-68">pc==3 &amp;&amp; polled_EC &amp;&amp; polled_drive</label>
+			<label kind="assignment" x="110" y="-51">pc:=0,y:=0,z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="144" y="8">pc==3 &amp;&amp; !(polled_EC &amp;&amp; polled_drive)</label>
+			<label kind="assignment" x="144" y="25">pc:=0,z:=0</label>
+			<nail x="136" y="42"/>
+			<nail x="136" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="136" y="59">pc==1</label>
+			<label kind="assignment" x="127" y="76">pc:=3</label>
+			<nail x="110" y="85"/>
+			<nail x="127" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="59" y="110">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="59" y="127">poll_not_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="59" y="144">pc:=1,polled_EC:=false,polled_drive:=false</label>
+			<nail x="59" y="102"/>
+			<nail x="85" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-110" y="110">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-110" y="127">poll_not_EC_drive[pid]!</label>
+			<label kind="assignment" x="-229" y="144">pc:=1,polled_EC:=false,polled_drive:=true</label>
+			<nail x="8" y="93"/>
+			<nail x="34" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-144" y="51">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-187" y="68">poll_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="-297" y="85">pc:=1,polled_EC:=true,polled_drive:=false</label>
+			<nail x="-34" y="68"/>
+			<nail x="-17" y="85"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-178" y="-9">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-178" y="8">poll_EC_drive[pid]!</label>
+			<label kind="assignment" x="-313" y="26">pc:=1,polled_EC:=true,polled_drive:=true</label>
+			<nail x="-51" y="17"/>
+			<nail x="-51" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-102" y="-263">pc==3 &amp;&amp; !polled_EC</label>
+			<label kind="assignment" x="-102" y="-246">pc:=0,z:=0</label>
+			<nail x="-110" y="-255"/>
+			<nail x="-102" y="-238"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-195" y="-76">pc==3 &amp;&amp; polled_EC</label>
+			<label kind="assignment" x="-144" y="-59">pc:=0,y:=0,z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-127" y="-297">pc==1</label>
+			<label kind="assignment" x="-110" y="-280">pc:=3</label>
+			<nail x="-136" y="-272"/>
+			<nail x="-119" y="-263"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-314" y="-161">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-399" y="-144">poll_not_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="-484" y="-127">pc:=1,polled_EC:=false,polled_drive:=false</label>
+			<nail x="-221" y="-136"/>
+			<nail x="-212" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-204" y="-348">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-204" y="-331">poll_EC_not_drive[pid]!</label>
+			<label kind="assignment" x="-204" y="-314">pc:=1,polled_EC:=true,polled_drive:=false</label>
+			<nail x="-170" y="-279"/>
+			<nail x="-153" y="-280"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-314" y="-331">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-365" y="-314">poll_not_EC_drive[pid]!</label>
+			<label kind="assignment" x="-467" y="-297">pc:=1,polled_EC:=false,polled_drive:=true</label>
+			<nail x="-204" y="-263"/>
+			<nail x="-187" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-323" y="-272">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-365" y="-255">poll_EC_drive[pid]!</label>
+			<label kind="assignment" x="-484" y="-238">pc:=1,polled_EC:=true,polled_drive:=true</label>
+			<nail x="-230" y="-238"/>
+			<nail x="-221" y="-255"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-255" y="-204">go?</label>
+		</transition>
+	</template>
+	<template>
+		<name>Ctrl</name>
+		<declaration>int[0,3] pc := 0;   // program counter
+bool polled_EC[pid_t]; // polled_CL corresponds to !polled_EC
+clock y;
+clock z;
+pid_t pid := 1;
+</declaration>
+		<location id="id6" x="-391" y="-17">
+			<urgent/>
+		</location>
+		<location id="id7" x="-195" y="-17">
+			<name x="-144" y="-34">Ready</name>
+			<label kind="invariant" x="-144" y="-51">z&lt;CYCLE</label>
+		</location>
+		<location id="id8" x="306" y="-323">
+			<name x="289" y="-306">Drive</name>
+			<label kind="invariant" x="281" y="-289">z&lt;CYCLE</label>
+		</location>
+		<location id="id9" x="773" y="-17">
+			<name x="696" y="-51">Fin</name>
+			<label kind="invariant" x="671" y="-34">z&lt;CYCLE</label>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="561" y="42">pc==3 &amp;&amp; !polled_EC[pid]</label>
+			<label kind="assignment" x="662" y="59">pc:=0,z:=0</label>
+			<nail x="739" y="51"/>
+			<nail x="714" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="782" y="59">pc==1
+&amp;&amp; y&gt;MUTEX_DELAY</label>
+			<label kind="assignment" x="782" y="93">pc:=3</label>
+			<nail x="807" y="51"/>
+			<nail x="782" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="858" y="8">pc==2</label>
+			<label kind="assignment" x="849" y="25">pc:=0,z:=0</label>
+			<nail x="850" y="17"/>
+			<nail x="833" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="858" y="-42">pc==1 &amp;&amp; y&lt;=MUTEX_DELAY</label>
+			<label kind="assignment" x="858" y="-25">pc:=2</label>
+			<nail x="849" y="-42"/>
+			<nail x="849" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="833" y="-111">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="833" y="-94">poll_not_EC[pid]!</label>
+			<label kind="assignment" x="833" y="-77">pc:=1,polled_EC[pid]:=false</label>
+			<nail x="816" y="-85"/>
+			<nail x="833" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="guard" x="731" y="-153">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="722" y="-136">poll_EC[pid]!</label>
+			<label kind="assignment" x="663" y="-119">pc:=1,polled_EC[pid]:=true</label>
+			<nail x="756" y="-93"/>
+			<nail x="782" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="391" y="-365">pc==3 &amp;&amp; polled_EC[pid]</label>
+			<label kind="assignment" x="391" y="-348">pc:=0,z:=0</label>
+			<nail x="383" y="-356"/>
+			<nail x="391" y="-331"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="366" y="-416">pc==1</label>
+			<label kind="assignment" x="374" y="-399">pc:=3</label>
+			<nail x="340" y="-399"/>
+			<nail x="366" y="-382"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="204" y="-459">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="178" y="-442">poll_not_EC[pid]!</label>
+			<label kind="assignment" x="119" y="-425">pc:=1,polled_EC[pid]:=false</label>
+			<nail x="263" y="-391"/>
+			<nail x="289" y="-399"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="136" y="-382">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="144" y="-365">poll_EC[pid]!</label>
+			<label kind="assignment" x="51" y="-348">pc:=1,polled_EC[pid]:=true</label>
+			<nail x="229" y="-340"/>
+			<nail x="238" y="-365"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-102" y="-17">pc==3 &amp;&amp; polled_EC[pid%N+1]
+&amp;&amp; !polled_EC[pid]</label>
+			<label kind="assignment" x="-102" y="17">pid:=pid%N+1,pc:=0,z:=0</label>
+			<nail x="-110" y="-9"/>
+			<nail x="-119" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-195" y="-161">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-204" y="-144">poll_not_EC[pid%N+1]!</label>
+			<label kind="assignment" x="-255" y="-127">pc:=1,polled_EC[pid%N+1]:=false</label>
+			<nail x="-187" y="-102"/>
+			<nail x="-161" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-357" y="-110">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-382" y="-93">poll_EC[pid%N+1]!</label>
+			<label kind="assignment" x="-467" y="-76">pc:=1,polled_EC[pid%N+1]:=true</label>
+			<nail x="-255" y="-76"/>
+			<nail x="-238" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-365" y="8">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-357" y="25">poll_EC[pid]!</label>
+			<label kind="assignment" x="-433" y="42">pc:=1,polled_EC[pid]:=true</label>
+			<nail x="-255" y="42"/>
+			<nail x="-272" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-382" y="68">pc==3 &amp;&amp; !polled_EC[pid]</label>
+			<label kind="assignment" x="-289" y="85">pc:=0,z:=0</label>
+			<nail x="-212" y="68"/>
+			<nail x="-238" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-195" y="68">pc==1</label>
+			<label kind="assignment" x="-195" y="85">pc:=3</label>
+			<nail x="-161" y="59"/>
+			<nail x="-187" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-136" y="42">pc==0 &amp;&amp; z&gt;0</label>
+			<label kind="synchronisation" x="-136" y="59">poll_not_EC[pid]!</label>
+			<label kind="assignment" x="-136" y="76">pc:=1,polled_EC[pid]:=false</label>
+			<nail x="-127" y="34"/>
+			<nail x="-144" y="51"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="459" y="-263">pc==3 &amp;&amp; !polled_EC[pid]</label>
+			<label kind="synchronisation" x="476" y="-246">set_not_drive[pid]!</label>
+			<label kind="assignment" x="503" y="-229">pc:=0,y:=0,z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id7"/>
+			<label kind="guard" x="229" y="-17">pc==3 &amp;&amp; polled_EC[pid]</label>
+			<label kind="assignment" x="221" y="0">pc:=0,y:=0,z:=0,pid:=pid%N+1</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-17" y="-255">pc==3 &amp;&amp; polled_EC[pid]</label>
+			<label kind="synchronisation" x="25" y="-238">set_drive[pid]!</label>
+			<label kind="assignment" x="0" y="-221">pc:=0,y:=0,z:=0</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-306" y="-34">go?</label>
+		</transition>
+	</template>
+	<system>system InOut, A, Ctrl;
+    </system>
+	<queries>
+		<query>
+			<formula>A[] forall (i : pid_t) forall (j : pid_t) i != j imply not (A(i).Go and A(j).Go)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
