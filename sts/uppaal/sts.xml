@@ -5,8 +5,8 @@
 // Henning Dierks, "Time, Abstraction and Heuristics",
 // Habilitation Thesis, Department of Computer Science,
 // University of Oldenburg, 2005 (http://www.avacs.org/Publikationen/Open/dierks05.pdf)
-// In this model, N trains can enter the criticical section from N different tracks.
-// The way they enter the critical section is fixed.
+// In this model, N trains can access the criticical section from N different tracks.
+// Mutual exclusion is ensured using a round-robin access policy.
 
 const int N = 2;        // Number of processes
 const int CYCLE = 1;   // Time of a cycle in a state

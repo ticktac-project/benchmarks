@@ -49,8 +49,8 @@ echo "# Inspired from the model introduced in Section 3.3.3 in
 "
 
 echo "
-# Mutual exclusion between process 1 and process 2 can be verified by checking
-# that two processes A can't be in state GO at the same time.
+# Mutual exclusion can be verified by checking that there cannot be two 
+# processes A in location Go at the same time.
 "
 
 echo "system:sts_${N}_${CYCLE}_$MUTEX_DELAY
