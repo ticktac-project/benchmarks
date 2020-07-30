@@ -18,7 +18,7 @@ arbiter_tree/tchecker/arbiter_tree.sh,Arbiter tree,TA TChecker
 arbiter_tree/uppaal/arbiter_tree.sh,Arbiter tree,TA UPPAAL
 mutex/tchecker/mutex.sh,Mutual exclusion protocol from Henning Dierks,TA TChecker
 mutex/uppaal/mutex.sh,Mutual exclusion protocol from Henning Dierks,TA UPPAAL
-sts/tchecker/single track segment from Henning Dierks, TA Tchecker
-sts/uppaal/single track segment from Henning Dierks, TA UPPAAL
+sts/tchecker/sts.sh, single track segment from Henning Dierks, TA Tchecker
+sts/uppaal/sts.sh, single track segment from Henning Dierks, TA UPPAAL
 schedulability/tchecker/scheduler.sh,Schedulability analysis of real time programs,TA TChecker
 schedulability/uppaal/scheduler.sh,Schedulability analysis of real time programs,TA UPPAAL
