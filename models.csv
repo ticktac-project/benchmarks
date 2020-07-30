@@ -20,5 +20,5 @@ mutex/tchecker/mutex.sh,Mutual exclusion protocol from Henning Dierks,TA TChecke
 mutex/uppaal/mutex.sh,Mutual exclusion protocol from Henning Dierks,TA UPPAAL
 sts/tchecker/single track segment from Henning Dierks, TA Tchecker
 sts/uppaal/single track segment from Henning Dierks, TA UPPAAL
-scheduler/tchecker/scheduler.sh,Schedulability analysis of real time programs,TA TChecker
-scheduler/uppaal/scheduler.sh,Schedulability analysis of real time programs,TA UPPAAL
+schedulability/tchecker/scheduler.sh,Schedulability analysis of real time programs,TA TChecker
+schedulability/uppaal/scheduler.sh,Schedulability analysis of real time programs,TA UPPAAL
