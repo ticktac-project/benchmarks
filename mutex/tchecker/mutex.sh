@@ -7,7 +7,7 @@
 # Check parameters
 
 CYCLE=1
-MUTEX_DELAY=2
+MUTEX_DELAY=0
 
 function usage() {
     echo "Usage: $0 N";
@@ -102,6 +102,7 @@ int:1:0:3:0:pc$pid
 location:A$pid:init{initial: : committed:}
 location:A$pid:Safe{invariant:z$pid<$CYCLE}
 location:A$pid:Unsafe{invariant:z$pid<$CYCLE}
+location:A$pid:Done
 edge:A$pid:init:Safe:set_safe$pid
 edge:A$pid:Safe:Safe:poll_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=1}
 edge:A$pid:Safe:Safe:poll_not_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=0}
@@ -112,7 +113,7 @@ edge:A$pid:Unsafe:Unsafe:tau{provided:pc$pid==1 : do:pc$pid=3}
 edge:A$pid:Unsafe:Unsafe:tau{provided:pc$pid==3 : do:pc$pid=0;z$pid=0}
 edge:A$pid:Unsafe:Unsafe:poll_not_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=0}
 edge:A$pid:Unsafe:Unsafe:poll_g$pid{provided:pc$pid==0&&z$pid>0 : do:pc$pid=1;polled_g$pid=1}
-edge:A$pid:Unsafe:Safe:set_safe$pid{provided:pc$pid==3 : do:pc$pid=0;y$pid=0;z$pid=0}"
+edge:A$pid:Unsafe:Done:set_safe$pid{provided:pc$pid==3 : do:pc$pid=0;y$pid=0;z$pid=0}"
 done
 
 echo "
@@ -122,13 +123,14 @@ clock:1:y
 clock:1:z
 int:1:0:1:1:polled_safe
 int:1:0:3:0:pc
-location:Ctrl:init{initial: : committed:}"
+location:Ctrl:init{initial: : committed:}
+location:Ctrl:Done"
 for pid in `seq 1 $N`; do
 echo "location:Ctrl:W$pid{invariant:z<$CYCLE}
 location:Ctrl:C$pid{invariant:z<$CYCLE}
 location:Ctrl:G$pid{invariant:z<$CYCLE}"
 done
-echo "edge:Ctrl:init:W$pid:set_not_g1"
+echo "edge:Ctrl:init:W1:set_not_g1"
 for pid in `seq 1 $N`; do
     echo "edge:Ctrl:W$pid:W$pid:tau{provided:pc==3&&polled_safe==0 : do:pc=0;z=0}
 edge:Ctrl:W$pid:W$pid:tau{provided:pc==1 : do:pc=3}
@@ -146,8 +148,12 @@ edge:Ctrl:G$pid:W$pid:set_not_g$pid{provided:pc==3&&polled_safe==0 : do:pc=0;y=0
 edge:Ctrl:G$pid:G$pid:tau{provided:pc==3&&polled_safe==1 : do:pc=0;z=0}
 edge:Ctrl:G$pid:G$pid:tau{provided:pc==1 : do:pc=3}
 edge:Ctrl:G$pid:G$pid:poll_unsafe$pid{provided:pc==0&&z>0 : do:pc=1;polled_safe=0}
-edge:Ctrl:G$pid:G$pid:poll_safe$pid{provided:pc==0&&z>0 : do:pc=1;polled_safe=1}
-edge:Ctrl:C$pid:G$((($pid%$N)+1)):set_g$((($pid%$N)+1)){provided:pc==3&&polled_safe==1 : do:pc=0;y=0;z=0}"
+edge:Ctrl:G$pid:G$pid:poll_safe$pid{provided:pc==0&&z>0 : do:pc=1;polled_safe=1}"
+    if [ $pid -eq $N ]; then
+        echo "edge:Ctrl:C$pid:Done:set_g1{provided:pc==3&&polled_safe==1 : do:pc=0;y=0;z=0}"
+    else
+        echo "edge:Ctrl:C$pid:G$(($pid+1)):set_g$(($pid+1)){provided:pc==3&&polled_safe==1 : do:pc=0;y=0;z=0}"
+    fi
 done
 
 echo "
